@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by Afauria on 2019/1/22.
  */
-public class ResultUtils {
+public class ResultUtil {
     public static <T> Result success(T data) {
         Result<T> result = new Result<>();
         result.setCode(0);

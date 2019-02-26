@@ -1,9 +1,8 @@
 package com.zwy.ciserver.controller;
 
-import com.zwy.ciserver.entity.User;
+import com.zwy.ciserver.entity.UserEntity;
 import com.zwy.ciserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,7 +24,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/add")
-    public int addUser(User user) {
+    public int addUser(UserEntity user) {
         return userService.addUser(user);
     }
 

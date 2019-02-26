@@ -1,10 +1,8 @@
 package com.zwy.ciserver.entity;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
-
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class UserEntity implements Serializable {
     private Integer id;
 
     private String username;

@@ -1,13 +1,13 @@
 package com.zwy.ciserver.service;
 
 import com.github.pagehelper.PageInfo;
-import com.zwy.ciserver.entity.User;
+import com.zwy.ciserver.entity.UserEntity;
 
 /**
  * Created by Afauria on 2019/1/22.
  */
 public interface UserService {
-    int addUser(User user);
+    int addUser(UserEntity user);
 
-    PageInfo<User> findAllUser(int pageNum, int pageSize);
+    PageInfo<UserEntity> findAllUser(int pageNum, int pageSize);
 }
