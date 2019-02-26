@@ -3,15 +3,17 @@ use db_ci;
 
 create table if not exists t_module(
 	module_id INT primary key auto_increment,
-	name VARCHAR(30) not null,
-	repo VARCHAR(70) not null,
-	branch VARCHAR(30) not null,
+	name VARCHAR(30) NOT NULL UNIQUE,
+	repo VARCHAR(70) NOT NULL,
+	branch VARCHAR(30) NOT NULL,
 	cur_version VARCHAR(10),
-	build_status INT(1),
+	build_status INT(1) DEFAULT 1,
 	#desc是关键字，不能做字段名
 	descr VARCHAR(100),
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	gmt_update TIMESTAMP NULL
+	#只能有一个DEFAULT CURRENT_TIMESTAMP除非加上后面的ON UPDATE CURRENT_TIMESTAMP
+	#mysql会默认为表中的第一个timestamp字段（且设置了NOT NULL）隐式设置DEFAULAT CURRENT_TIMESTAMP
+	gmt_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )DEFAULT CHARSET=utf8;
 
 create table if not exists t_project(

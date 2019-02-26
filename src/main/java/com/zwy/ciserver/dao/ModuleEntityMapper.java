@@ -5,9 +5,13 @@ import com.zwy.ciserver.entity.ModuleEntity;
 import java.util.List;
 
 public interface ModuleEntityMapper {
-    int insert(ModuleEntity record);
-
-    int insertSelective(ModuleEntity record);
+    int insertModule(ModuleEntity record);
 
     List<ModuleEntity> selectModules();
+
+    ModuleEntity selectModuleByName(String name);
+
+    ModuleEntity selectModuleById(int moduleId);
+
+    int deleteModuleById(int id);
 }

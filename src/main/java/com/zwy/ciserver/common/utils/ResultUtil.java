@@ -14,17 +14,14 @@ public class ResultUtil {
         result.setMsg("ok");
         result.setSuccess(true);
         result.setData(data);
-
         return result;
     }
 
     public static Result error(int code, @NotNull String msg) {
-
         Result result = new Result();
         result.setCode(code);
         result.setMsg(msg);
         result.setSuccess(false);
-
         return result;
     }
 

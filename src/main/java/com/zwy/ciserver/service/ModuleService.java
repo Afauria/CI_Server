@@ -7,7 +7,11 @@ import com.zwy.ciserver.entity.ModuleEntity;
  * Created by Afauria on 2019/2/25.
  */
 public interface ModuleService {
-    int addModule(ModuleEntity module);
+    ModuleEntity addModule(ModuleEntity module);
 
-    PageInfo<ModuleEntity> findAllModule(int pageNum, int pageSize);
+    PageInfo<ModuleEntity> listModules(int pageNum, int pageSize);
+
+    int removeModuleById(int moduleId);
+
+    ModuleEntity modifyModule(ModuleEntity moduleEntity);
 }

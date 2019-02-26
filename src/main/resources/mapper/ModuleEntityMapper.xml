@@ -1,98 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zwy.ciserver.dao.ModuleEntityMapper" >
-  <resultMap id="BaseResultMap" type="com.zwy.ciserver.entity.ModuleEntity" >
-    <result column="module_id" property="moduleId" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="repo" property="repo" jdbcType="VARCHAR" />
-    <result column="branch" property="branch" jdbcType="VARCHAR" />
-    <result column="cur_version" property="curVersion" jdbcType="VARCHAR" />
-    <result column="build_status" property="buildStatus" jdbcType="INTEGER" />
-    <result column="descr" property="descr" jdbcType="VARCHAR" />
-    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
-    <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP" />
-  </resultMap>
-  <sql id="TABLE">
-    t_module
-  </sql>
-  <sql id="COLUMN">
-    module_id, name, repo, branch, cur_version, build_status, descr, gmt_create, gmt_update
-  </sql>
-  <select id="selectModules" resultMap="BaseResultMap">
-    select
-    <include refid="COLUMN"/>
-    from
-    <include refid="TABLE"/>
-  </select>
-  <insert id="insert" parameterType="com.zwy.ciserver.entity.ModuleEntity"  >
-    insert into t_module (module_id, `name`, repo, 
-      branch, cur_version, build_status, 
-      descr, gmt_create, gmt_update
-      )
-    values (#{moduleId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{repo,jdbcType=VARCHAR}, 
-      #{branch,jdbcType=VARCHAR}, #{curVersion,jdbcType=VARCHAR}, #{buildStatus,jdbcType=INTEGER}, 
-      #{descr,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtUpdate,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.zwy.ciserver.entity.ModuleEntity" >
-    insert into t_module
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="moduleId != null" >
-        module_id,
-      </if>
-      <if test="name != null" >
-        `name`,
-      </if>
-      <if test="repo != null" >
-        repo,
-      </if>
-      <if test="branch != null" >
-        branch,
-      </if>
-      <if test="curVersion != null" >
-        cur_version,
-      </if>
-      <if test="buildStatus != null" >
-        build_status,
-      </if>
-      <if test="descr != null" >
-        descr,
-      </if>
-      <if test="gmtCreate != null" >
-        gmt_create,
-      </if>
-      <if test="gmtUpdate != null" >
-        gmt_update,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="moduleId != null" >
-        #{moduleId,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="repo != null" >
-        #{repo,jdbcType=VARCHAR},
-      </if>
-      <if test="branch != null" >
-        #{branch,jdbcType=VARCHAR},
-      </if>
-      <if test="curVersion != null" >
-        #{curVersion,jdbcType=VARCHAR},
-      </if>
-      <if test="buildStatus != null" >
-        #{buildStatus,jdbcType=INTEGER},
-      </if>
-      <if test="descr != null" >
-        #{descr,jdbcType=VARCHAR},
-      </if>
-      <if test="gmtCreate != null" >
-        #{gmtCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="gmtUpdate != null" >
-        #{gmtUpdate,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
+<mapper namespace="com.zwy.ciserver.dao.ModuleEntityMapper">
+    <resultMap id="BaseResultMap" type="com.zwy.ciserver.entity.ModuleEntity">
+        <result column="module_id" property="moduleId" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="repo" property="repo" jdbcType="VARCHAR"/>
+        <result column="branch" property="branch" jdbcType="VARCHAR"/>
+        <result column="cur_version" property="curVersion" jdbcType="VARCHAR"/>
+        <result column="build_status" property="buildStatus" jdbcType="INTEGER"/>
+        <result column="descr" property="descr" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="TABLE">
+        t_module
+    </sql>
+    <sql id="COLUMN">
+        module_id, name, repo, branch, cur_version, build_status, descr, gmt_create, gmt_update
+    </sql>
+
+    <delete id="deleteModuleById">
+        delete from
+        <include refid="TABLE"/>
+        where module_id = #{moduleId}
+    </delete>
+
+    <select id="selectModules" resultMap="BaseResultMap">
+        select
+        <include refid="COLUMN"/>
+        from
+        <include refid="TABLE"/>
+    </select>
+
+    <select id="selectModuleByName" resultType="com.zwy.ciserver.entity.ModuleEntity">
+        select <include refid="COLUMN"/> from
+        <include refid="TABLE"/>
+        where name = #{name}
+    </select>
+
+    <select id="selectModuleById" resultType="com.zwy.ciserver.entity.ModuleEntity">
+        select <include refid="COLUMN"/> from
+        <include refid="TABLE"/>
+        where module_id = #{moduleId}
+    </select>
+
+    <insert id="insertModule" parameterType="com.zwy.ciserver.entity.ModuleEntity" useGeneratedKeys="true"
+            keyProperty="moduleId">
+        insert into
+        <include refid="TABLE"/>
+        (`name`, repo, branch, descr)
+        values (#{name}, #{repo}, #{branch}, #{descr})
+    </insert>
+
 </mapper>

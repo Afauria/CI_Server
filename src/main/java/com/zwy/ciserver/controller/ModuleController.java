@@ -18,16 +18,21 @@ public class ModuleController {
     private ModuleService mModuleService;
 
     @PostMapping("/add")
-    public int addModule(ModuleEntity module) {
-        return mModuleService.addModule(module);
+    public Result addModule(@RequestBody ModuleEntity module) {
+        return ResultUtil.success(mModuleService.addModule(module));
+    }
+
+    @PostMapping("/remove")
+    public Result removeModule(int moduleId) {
+        return ResultUtil.success(mModuleService.removeModuleById(moduleId));
     }
 
     @GetMapping("/list")
-    public Result findAllModule(@RequestParam(name = "pageNum", required = false, defaultValue = "1")
-                                                    int pageNum,
-                                @RequestParam(name = "pageSize", required = false, defaultValue = "10")
-                                                    int pageSize) {
-        return ResultUtil.success(mModuleService.findAllModule(pageNum, pageSize));
+    public Result listModules(@RequestParam(name = "pageNum", required = false, defaultValue = "1")
+                                        int pageNum,
+                              @RequestParam(name = "pageSize", required = false, defaultValue = "10")
+                                        int pageSize) {
+        return ResultUtil.success(mModuleService.listModules(pageNum, pageSize));
 
     }
 }
