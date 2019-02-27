@@ -27,11 +27,16 @@ public class ModuleController {
         return ResultUtil.success(mModuleService.removeModuleById(moduleId));
     }
 
+    @PostMapping("/modify")
+    public Result modifyModule(ModuleEntity moduleEntity) {
+        return ResultUtil.success(mModuleService.modifyModule(moduleEntity));
+    }
+
     @GetMapping("/list")
     public Result listModules(@RequestParam(name = "pageNum", required = false, defaultValue = "1")
-                                        int pageNum,
+                                      int pageNum,
                               @RequestParam(name = "pageSize", required = false, defaultValue = "10")
-                                        int pageSize) {
+                                      int pageSize) {
         return ResultUtil.success(mModuleService.listModules(pageNum, pageSize));
 
     }

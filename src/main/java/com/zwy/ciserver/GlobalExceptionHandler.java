@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Result sqlErrorHandler(DataAccessException ex) {
-        return ResultUtil.error(SQL_ERROR_CODE, "数据库操作异常");
+        return ResultUtil.error(SQL_ERROR_CODE, ex.getCause().toString());
     }
 
     /**

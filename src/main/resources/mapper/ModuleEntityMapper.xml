@@ -16,8 +16,17 @@
         t_module
     </sql>
     <sql id="COLUMN">
-        module_id, name, repo, branch, cur_version, build_status, descr, gmt_create, gmt_update
+        module_id, `name`, repo, branch, cur_version, build_status, descr, gmt_create, gmt_update
     </sql>
+    <update id="updateModule">
+        update
+        <include refid="TABLE"/>
+        <set>
+            `name` = #{name}, repo = #{repo}, branch = #{branch},
+            <if test="descr!=null">descr = #{descr},</if>
+        </set>
+        where module_id = #{moduleId}
+    </update>
 
     <delete id="deleteModuleById">
         delete from
@@ -33,13 +42,17 @@
     </select>
 
     <select id="selectModuleByName" resultType="com.zwy.ciserver.entity.ModuleEntity">
-        select <include refid="COLUMN"/> from
+        select
+        <include refid="COLUMN"/>
+        from
         <include refid="TABLE"/>
         where name = #{name}
     </select>
 
     <select id="selectModuleById" resultType="com.zwy.ciserver.entity.ModuleEntity">
-        select <include refid="COLUMN"/> from
+        select
+        <include refid="COLUMN"/>
+        from
         <include refid="TABLE"/>
         where module_id = #{moduleId}
     </select>

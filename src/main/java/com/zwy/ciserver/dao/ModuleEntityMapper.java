@@ -14,4 +14,6 @@ public interface ModuleEntityMapper {
     ModuleEntity selectModuleById(int moduleId);
 
     int deleteModuleById(int id);
+
+    void updateModule(ModuleEntity moduleEntity);
 }

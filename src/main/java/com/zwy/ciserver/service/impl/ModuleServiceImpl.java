@@ -8,6 +8,7 @@ import com.zwy.ciserver.entity.ModuleEntity;
 import com.zwy.ciserver.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class ModuleServiceImpl implements ModuleService {
     private ModuleEntityMapper mModuleEntityMapper;//这里会报错，但是并不会影响
 
     @Override
+    @Transactional
     public ModuleEntity addModule(ModuleEntity moduleEntity) {
         if (mModuleEntityMapper.selectModuleByName(moduleEntity.getName()) != null) {
             throw new BusinessException(-1, "添加失败；组件名已存在！");
@@ -29,6 +31,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
+    @Transactional
     public int removeModuleById(int moduleId) {
         if (mModuleEntityMapper.selectModuleById(moduleId) == null) {
             throw new BusinessException(-1, "删除失败：组件不存在！");
@@ -38,8 +41,13 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
+    @Transactional
     public ModuleEntity modifyModule(ModuleEntity moduleEntity) {
-        return null;
+        if(mModuleEntityMapper.selectModuleById(moduleEntity.getModuleId())==null){
+            throw new BusinessException(-1,"修改失败：组件不存在！");
+        }
+        mModuleEntityMapper.updateModule(moduleEntity);
+        return moduleEntity;
     }
 
     @Override
