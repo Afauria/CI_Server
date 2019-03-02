@@ -14,4 +14,6 @@ public interface ModuleService {
     int removeModuleById(int moduleId);
 
     ModuleEntity modifyModule(ModuleEntity moduleEntity);
+
+    boolean buildModule(int moduleId);
 }

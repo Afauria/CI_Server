@@ -40,4 +40,9 @@ public class ModuleController {
         return ResultUtil.success(mModuleService.listModules(pageNum, pageSize));
 
     }
+
+    @PostMapping("/build")
+    public Result buildModule(@RequestParam(name = "moduleId", required = true) int moduleId){
+        return ResultUtil.success(mModuleService.buildModule(moduleId));
+    }
 }

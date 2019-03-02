@@ -8,7 +8,10 @@ mybatis:
   typeAliasesPackage: com.zwy.ciserver.entity #对应实体类路径
   mapperLocations: classpath:mapper/*.xml
 
-
+jenkins:
+  url: http://localhost:8082/
+  user: user
+  pwd: pwd
 ---
 
 #开发配置
