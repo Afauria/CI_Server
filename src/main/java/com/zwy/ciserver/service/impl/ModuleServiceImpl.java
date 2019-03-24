@@ -2,9 +2,12 @@ package com.zwy.ciserver.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.base.Optional;
 import com.offbytwo.jenkins.JenkinsServer;
+import com.offbytwo.jenkins.model.FolderJob;
 import com.offbytwo.jenkins.model.Job;
-import com.zwy.ciserver.JenkinsServerFactory;
+import com.sun.org.apache.xpath.internal.operations.Mod;
+import com.zwy.ciserver.jenkins.JenkinsServerFactory;
 import com.zwy.ciserver.common.exception.BusinessException;
 import com.zwy.ciserver.dao.ModuleEntityMapper;
 import com.zwy.ciserver.entity.ModuleEntity;
@@ -12,8 +15,8 @@ import com.zwy.ciserver.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.Test;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +27,18 @@ import java.util.Map;
 @Service(value = "moduleService")
 public class ModuleServiceImpl implements ModuleService {
     @Autowired
-    private ModuleEntityMapper mModuleEntityMapper;//这里会报错，但是并不会影响
-    JenkinsServer mJenkinsServer;
+    private ModuleEntityMapper mModuleEntityMapper;
+
     @Autowired
     JenkinsServerFactory mJenkinsServerFactory;
+
+    JenkinsServer mJenkinsServer;
+
+    @PostConstruct
+    public void init() {
+        mJenkinsServer = mJenkinsServerFactory.createJenkinsServer();
+    }
+
     @Override
     @Transactional
     public ModuleEntity addModule(ModuleEntity moduleEntity) {
@@ -35,6 +46,13 @@ public class ModuleServiceImpl implements ModuleService {
             throw new BusinessException(-1, "添加失败；组件名已存在！");
         }
         mModuleEntityMapper.insertModule(moduleEntity);
+        try {
+            String jobXml = mJenkinsServerFactory.generateModuleConfig(moduleEntity);
+            mJenkinsServer.createJob(mJenkinsServerFactory.getModuleFolderJob(), moduleEntity.getName(), jobXml);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BusinessException(-1,"添加失败，Jenkins添加Job异常");
+        }
         return moduleEntity;
     }
 
@@ -44,17 +62,31 @@ public class ModuleServiceImpl implements ModuleService {
         if (mModuleEntityMapper.selectModuleById(moduleId) == null) {
             throw new BusinessException(-1, "删除失败：组件不存在！");
         }
+        ModuleEntity moduleEntity = mModuleEntityMapper.selectModuleById(moduleId);
         mModuleEntityMapper.deleteModuleById(moduleId);
+        try {
+            mJenkinsServer.deleteJob(mJenkinsServerFactory.getModuleFolderJob(), moduleEntity.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BusinessException(-1, "删除失败，Jenkins删除Job异常");
+        }
         return moduleId;
     }
 
     @Override
     @Transactional
     public ModuleEntity modifyModule(ModuleEntity moduleEntity) {
-        if(mModuleEntityMapper.selectModuleById(moduleEntity.getModuleId())==null){
-            throw new BusinessException(-1,"修改失败：组件不存在！");
+        if (mModuleEntityMapper.selectModuleById(moduleEntity.getModuleId()) == null) {
+            throw new BusinessException(-1, "修改失败：组件不存在！");
         }
         mModuleEntityMapper.updateModule(moduleEntity);
+        String jobXml = mJenkinsServerFactory.generateModuleConfig(moduleEntity);
+        try {
+            mJenkinsServer.updateJob(moduleEntity.getName(),jobXml);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BusinessException(-1, "修改失败，Jenkins修改Job异常");
+        }
         return moduleEntity;
     }
 
@@ -68,17 +100,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public boolean buildModule(int moduleId){
-        mJenkinsServer = mJenkinsServerFactory.createJenkinsServer();
-        try {
-            Map<String,Job> jobs = mJenkinsServer.getJobs();
-            System.out.println(mJenkinsServer.getJobXml("CI_Module"));
-            for (Map.Entry<String,Job> o : jobs.entrySet()) {
-                System.out.println(o.getValue().getName());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public boolean buildModule(int moduleId) {
         return false;
     }
 }

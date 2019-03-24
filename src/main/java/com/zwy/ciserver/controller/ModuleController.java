@@ -18,7 +18,7 @@ public class ModuleController {
     private ModuleService mModuleService;
 
     @PostMapping("/add")
-    public Result addModule(@RequestBody ModuleEntity module) {
+    public Result addModule(ModuleEntity module) {
         return ResultUtil.success(mModuleService.addModule(module));
     }
 
@@ -38,11 +38,10 @@ public class ModuleController {
                               @RequestParam(name = "pageSize", required = false, defaultValue = "10")
                                       int pageSize) {
         return ResultUtil.success(mModuleService.listModules(pageNum, pageSize));
-
     }
 
     @PostMapping("/build")
-    public Result buildModule(@RequestParam(name = "moduleId", required = true) int moduleId){
+    public Result buildModule(@RequestParam(name = "moduleId", required = true) int moduleId) {
         return ResultUtil.success(mModuleService.buildModule(moduleId));
     }
 }
