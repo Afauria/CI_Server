@@ -18,17 +18,17 @@ public class ModuleController {
     private ModuleService mModuleService;
 
     @PostMapping("/add")
-    public Result addModule(ModuleEntity module) {
+    public Result addModule(@RequestBody ModuleEntity module) {
         return ResultUtil.success(mModuleService.addModule(module));
     }
 
     @PostMapping("/remove")
-    public Result removeModule(int moduleId) {
+    public Result removeModule(Integer moduleId) {
         return ResultUtil.success(mModuleService.removeModuleById(moduleId));
     }
 
     @PostMapping("/modify")
-    public Result modifyModule(ModuleEntity moduleEntity) {
+    public Result modifyModule(@RequestBody ModuleEntity moduleEntity) {
         return ResultUtil.success(mModuleService.modifyModule(moduleEntity));
     }
 
@@ -40,8 +40,14 @@ public class ModuleController {
         return ResultUtil.success(mModuleService.listModules(pageNum, pageSize));
     }
 
+    @PostMapping("/searchVersion")
+    public Result searchVersion(String curVersion, boolean rcFlag) {
+        String nextVersion = mModuleService.searchBuildVersion(curVersion, rcFlag);
+        return ResultUtil.success(nextVersion);
+    }
+
     @PostMapping("/build")
-    public Result buildModule(@RequestParam(name = "moduleId", required = true) int moduleId) {
-        return ResultUtil.success(mModuleService.buildModule(moduleId));
+    public Result buildModule(Integer moduleId,String version) {
+        return ResultUtil.success(mModuleService.buildModule(moduleId,version));
     }
 }

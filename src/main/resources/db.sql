@@ -7,7 +7,9 @@ create table if not exists t_module(
 	repo VARCHAR(70) NOT NULL,
 	branch VARCHAR(30) NOT NULL,
 	cur_version VARCHAR(10),
+	# 1：还未构建；2：正在构建；3：构建成功；4：构建失败
 	build_status INT(1) DEFAULT 1,
+	catalog VARCHAR(30) NOT NULL,
 	#desc是关键字，不能做字段名
 	descr VARCHAR(100),
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -15,10 +17,7 @@ create table if not exists t_module(
 	#mysql会默认为表中的第一个timestamp字段（且设置了NOT NULL）隐式设置DEFAULAT CURRENT_TIMESTAMP
 	gmt_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )DEFAULT CHARSET=utf8;
-results: 10
-page: 1
-sortField: name
-sortOrder: ascend
+
 create table if not exists t_project(
 	project_id INT primary key auto_increment,
 	name VARCHAR(30) not null,
@@ -37,6 +36,18 @@ create table if not exists t_project_module(
 	module_id int,
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	gmt_update TIMESTAMP NULL,
-       	FOREIGN KEY (project_id) REFERENCES t_project(project_id),
-       	FOREIGN KEY (module_id) REFERENCES t_module(module_id)
+	FOREIGN KEY (project_id) REFERENCES t_project(project_id),
+	FOREIGN KEY (module_id) REFERENCES t_module(module_id)
+)DEFAULT CHARSET=utf8;
+
+create table if not exists t_module_build(
+	id INT PRIMARY KEY auto_increment,
+	module_id int NOT NULL,
+	job_name VARCHAR(30) NOT NULL,
+	build_num int NOT NULL,
+	build_status INT(1) DEFAULT 1,
+	version VARCHAR(10) NOT NULL,
+	message VARCHAR(100),
+	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (module_id) REFERENCES t_module(module_id)
 )DEFAULT CHARSET=utf8;

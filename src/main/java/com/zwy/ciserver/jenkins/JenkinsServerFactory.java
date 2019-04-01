@@ -84,9 +84,10 @@ public class JenkinsServerFactory {
     //[\s\S]*：匹配所有字符。\s空白符，\S非空白符
     public String generateModuleConfig(ModuleEntity moduleEntity) {
         String jobXml = mModuleJobTemplate;
-        jobXml = replaceByLabel("displayName", moduleEntity.getName(), jobXml);
+        jobXml = replaceByLabel("displayName", moduleEntity.getCatalog() + "_" + moduleEntity.getName(), jobXml);
         jobXml = replaceByLabel("url", moduleEntity.getRepo(), jobXml);
         jobXml = replaceByLabel("branch", moduleEntity.getBranch(), jobXml);
+        jobXml = replaceByLabel("customWorkspace", "/var/jenkins_workspace/" + moduleEntity.getCatalog(), jobXml);
         return jobXml;
     }
 
@@ -101,7 +102,6 @@ public class JenkinsServerFactory {
     public String generateProjectConfig() {
         return mProjectJobTemplate;
     }
-
 
     public FolderJob getModuleFolderJob() {
         return moduleFolderJob;

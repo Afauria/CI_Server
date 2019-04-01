@@ -5,7 +5,6 @@ import com.zwy.ciserver.common.model.Result;
 import com.zwy.ciserver.common.utils.ResultUtil;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,7 +13,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.validation.ConstraintViolationException;
 
 //开启全局异常监听
-@ControllerAdvice
+//@ControllerAdvice
 public class GlobalExceptionHandler {
 
     private final static int DEFAULT_ERROR_CODE = 99999;

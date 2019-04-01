@@ -5,7 +5,7 @@ import com.zwy.ciserver.entity.ModuleEntity;
 import java.util.List;
 
 public interface ModuleEntityMapper {
-    int insertModule(ModuleEntity record);
+    int insertModule(ModuleEntity moduleEntity);
 
     List<ModuleEntity> selectModules();
 
@@ -16,4 +16,8 @@ public interface ModuleEntityMapper {
     int deleteModuleById(int id);
 
     void updateModule(ModuleEntity moduleEntity);
+
+    void updateStatus(int moduleId,int buildStatus);
+
+    void updateVersion(int moduleId,String curVersion);
 }

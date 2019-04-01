@@ -18,11 +18,21 @@ public class ModuleEntity implements Serializable {
 
     private String descr;
 
+    private String catalog;
+
     private Date gmtCreate;
 
     private Date gmtUpdate;
 
     private static final long serialVersionUID = 1L;
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
+    }
 
     public Integer getModuleId() {
         return moduleId;
@@ -105,6 +115,7 @@ public class ModuleEntity implements Serializable {
         sb.append(", moduleId=").append(moduleId);
         sb.append(", name=").append(name);
         sb.append(", repo=").append(repo);
+        sb.append(", catalog=").append(catalog);
         sb.append(", branch=").append(branch);
         sb.append(", curVersion=").append(curVersion);
         sb.append(", buildStatus=").append(buildStatus);

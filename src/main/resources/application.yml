@@ -3,6 +3,10 @@ spring:
   profiles:
     active: dev
 
+server:
+  #端口号
+  port: 8083
+
 #公共配置与profiles选择无关
 mybatis:
   typeAliasesPackage: com.zwy.ciserver.entity #对应实体类路径
@@ -15,6 +19,10 @@ jenkins:
   folders:
     module: AndroidModuleFolder
     project: AndroidProjectFolder
+
+logging:
+  path: /output
+  file: aries.log
 ---
 
 #开发配置

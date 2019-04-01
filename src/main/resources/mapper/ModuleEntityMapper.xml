@@ -7,6 +7,7 @@
         <result column="repo" property="repo" jdbcType="VARCHAR"/>
         <result column="branch" property="branch" jdbcType="VARCHAR"/>
         <result column="cur_version" property="curVersion" jdbcType="VARCHAR"/>
+        <result column="catalog" property="catalog" jdbcType="VARCHAR"/>
         <result column="build_status" property="buildStatus" jdbcType="INTEGER"/>
         <result column="descr" property="descr" jdbcType="VARCHAR"/>
         <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
@@ -16,14 +17,32 @@
         t_module
     </sql>
     <sql id="COLUMN">
-        module_id, `name`, repo, branch, cur_version, build_status, descr, gmt_create, gmt_update
+        module_id, `name`, repo, branch, catalog, cur_version, build_status, descr, gmt_create, gmt_update
     </sql>
     <update id="updateModule">
         update
         <include refid="TABLE"/>
         <set>
-            `name` = #{name}, repo = #{repo}, branch = #{branch},
+            `name` = #{name}, repo = #{repo}, branch = #{branch}, catalog = #{catalog},
             <if test="descr!=null">descr = #{descr},</if>
+        </set>
+        where module_id = #{moduleId}
+    </update>
+
+    <update id="updateStatus">
+        update
+        <include refid="TABLE"/>
+        <set>
+           build_status = #{buildStatus}
+        </set>
+        where module_id = #{moduleId}
+    </update>
+
+    <update id="updateVersion">
+        update
+        <include refid="TABLE"/>
+        <set>
+            cur_version = #{curVersion}
         </set>
         where module_id = #{moduleId}
     </update>
@@ -56,13 +75,13 @@
         <include refid="TABLE"/>
         where module_id = #{moduleId}
     </select>
-
+<!--useGeneratedKeys="true" keyProperty="moduleId" 返回新增加的主键倒moduleId属性中-->
     <insert id="insertModule" parameterType="com.zwy.ciserver.entity.ModuleEntity" useGeneratedKeys="true"
             keyProperty="moduleId">
         insert into
         <include refid="TABLE"/>
-        (`name`, repo, branch, descr)
-        values (#{name}, #{repo}, #{branch}, #{descr})
+        (`name`, repo, catalog, branch, descr)
+        values (#{name}, #{repo},#{catalog}, #{branch}, #{descr})
     </insert>
 
 </mapper>
