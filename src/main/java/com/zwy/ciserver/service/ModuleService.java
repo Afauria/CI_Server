@@ -8,9 +8,10 @@ import com.zwy.ciserver.entity.ModuleBuildEntity;
  * Created by Afauria on 2019/2/25.
  */
 public interface ModuleService {
-    ModuleEntity addModule(ModuleEntity module);
 
     PageInfo<ModuleEntity> listModules(int pageNum, int pageSize);
+
+    ModuleEntity addModule(ModuleEntity module);
 
     int removeModuleById(int moduleId);
 

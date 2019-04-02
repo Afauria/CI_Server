@@ -17,6 +17,14 @@ public class ModuleController {
     @Autowired
     private ModuleService mModuleService;
 
+    @GetMapping("/list")
+    public Result listModules(@RequestParam(name = "pageNum", required = false, defaultValue = "1")
+                                      int pageNum,
+                              @RequestParam(name = "pageSize", required = false, defaultValue = "10")
+                                      int pageSize) {
+        return ResultUtil.success(mModuleService.listModules(pageNum, pageSize));
+    }
+
     @PostMapping("/add")
     public Result addModule(@RequestBody ModuleEntity module) {
         return ResultUtil.success(mModuleService.addModule(module));
@@ -30,14 +38,6 @@ public class ModuleController {
     @PostMapping("/modify")
     public Result modifyModule(@RequestBody ModuleEntity moduleEntity) {
         return ResultUtil.success(mModuleService.modifyModule(moduleEntity));
-    }
-
-    @GetMapping("/list")
-    public Result listModules(@RequestParam(name = "pageNum", required = false, defaultValue = "1")
-                                      int pageNum,
-                              @RequestParam(name = "pageSize", required = false, defaultValue = "10")
-                                      int pageSize) {
-        return ResultUtil.success(mModuleService.listModules(pageNum, pageSize));
     }
 
     @PostMapping("/searchVersion")

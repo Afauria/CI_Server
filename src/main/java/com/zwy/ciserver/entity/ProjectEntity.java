@@ -8,11 +8,15 @@ public class ProjectEntity implements Serializable {
 
     private String name;
 
+    private String repo;
+
     private String branch;
 
     private String curVersion;
 
-    private Integer status;
+    private Integer buildStatus;
+
+    private Integer integrateStatus;
 
     private String descr;
 
@@ -38,6 +42,14 @@ public class ProjectEntity implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
+    public String getRepo() {
+        return repo;
+    }
+
+    public void setRepo(String repo) {
+        this.repo = repo;
+    }
+
     public String getBranch() {
         return branch;
     }
@@ -54,12 +66,20 @@ public class ProjectEntity implements Serializable {
         this.curVersion = curVersion == null ? null : curVersion.trim();
     }
 
-    public Integer getStatus() {
-        return status;
+    public Integer getBuildStatus() {
+        return buildStatus;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setBuildStatus(Integer buildStatus) {
+        this.buildStatus = buildStatus;
+    }
+
+    public Integer getIntegrateStatus() {
+        return integrateStatus;
+    }
+
+    public void setIntegrateStatus(Integer integrateStatus) {
+        this.integrateStatus = integrateStatus;
     }
 
     public String getDescr() {
@@ -94,9 +114,11 @@ public class ProjectEntity implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", projectId=").append(projectId);
         sb.append(", name=").append(name);
+        sb.append(", repo=").append(repo);
         sb.append(", branch=").append(branch);
         sb.append(", curVersion=").append(curVersion);
-        sb.append(", status=").append(status);
+        sb.append(", buildStatus=").append(buildStatus);
+        sb.append(", integrateStatus=").append(integrateStatus);
         sb.append(", descr=").append(descr);
         sb.append(", gmtCreate=").append(gmtCreate);
         sb.append(", gmtUpdate=").append(gmtUpdate);

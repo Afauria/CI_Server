@@ -14,20 +14,21 @@ create table if not exists t_module(
 	descr VARCHAR(100),
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	#只能有一个DEFAULT CURRENT_TIMESTAMP除非加上后面的ON UPDATE CURRENT_TIMESTAMP
-	#mysql会默认为表中的第一个timestamp字段（且设置了NOT NULL）隐式设置DEFAULAT CURRENT_TIMESTAMP
+	#mysql会默认将表中的第一个timestamp字段（且设置了NOT NULL）隐式设置DEFAULAT CURRENT_TIMESTAMP
 	gmt_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )DEFAULT CHARSET=utf8;
 
 create table if not exists t_project(
 	project_id INT primary key auto_increment,
-	name VARCHAR(30) not null,
-	repo VARCHAR(50) not null,
-	branch VARCHAR(30) not null,
+	name VARCHAR(30) NOT NULL,
+	repo VARCHAR(50) NOT NULL,
+	branch VARCHAR(30) NOT NULL,
 	cur_version VARCHAR(10),
-	status INT(1),
+	build_status INT(1) DEFAULT 1,
+	integrate_status INT(1) DEFAULT 1,
 	descr VARCHAR(100),
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	gmt_update TIMESTAMP NULL
+	gmt_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )DEFAULT CHARSET=utf8;
 
 create table if not exists t_project_module(

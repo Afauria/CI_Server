@@ -30,7 +30,8 @@ spring:
   profiles: dev
 
   datasource:
-    url: jdbc:mysql://localhost:3306/db_ci?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    # serverTimezone设置时区，+8要换成%2B8，url才能解析出来
+    url: jdbc:mysql://localhost:3306/db_ci?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
     username: root
     password: a410013112
     driver-class-name: com.mysql.cj.jdbc.Driver

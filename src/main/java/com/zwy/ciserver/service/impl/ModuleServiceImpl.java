@@ -46,6 +46,16 @@ public class ModuleServiceImpl implements ModuleService {
         mJenkinsServer = mJenkinsServerFactory.createJenkinsServer();
     }
 
+
+    @Override
+    public PageInfo<ModuleEntity> listModules(int pageNum, int pageSize) {
+        //将参数传给这个方法就可以实现物理分页了。
+        PageHelper.startPage(pageNum, pageSize);
+        List<ModuleEntity> modules = mModuleEntityMapper.selectModules();
+        PageInfo result = new PageInfo(modules);
+        return result;
+    }
+
     @Override
     @Transactional
     public ModuleEntity addModule(ModuleEntity moduleEntity) {
@@ -90,8 +100,10 @@ public class ModuleServiceImpl implements ModuleService {
         mModuleEntityMapper.updateModule(moduleEntity);
         String jobXml = mJenkinsServerFactory.generateModuleConfig(moduleEntity);
         try {
-            mJenkinsServer.renameJob(mJenkinsServerFactory.getModuleFolderJob(), oldModuleEntity.getName(),
-                    moduleEntity.getName());
+            if (!oldModuleEntity.getName().equals(moduleEntity.getName())) {
+                mJenkinsServer.renameJob(mJenkinsServerFactory.getModuleFolderJob(), oldModuleEntity.getName(),
+                        moduleEntity.getName());
+            }
             mJenkinsServer.updateJob(mJenkinsServerFactory.getModuleFolderJob(), moduleEntity.getName(), jobXml,
                     true);
         } catch (IOException e) {
@@ -99,15 +111,6 @@ public class ModuleServiceImpl implements ModuleService {
             throw new BusinessException(-1, "修改失败，Jenkins修改Job异常");
         }
         return moduleEntity;
-    }
-
-    @Override
-    public PageInfo<ModuleEntity> listModules(int pageNum, int pageSize) {
-        //将参数传给这个方法就可以实现物理分页了。
-        PageHelper.startPage(pageNum, pageSize);
-        List<ModuleEntity> modules = mModuleEntityMapper.selectModules();
-        PageInfo result = new PageInfo(modules);
-        return result;
     }
 
     @Override
