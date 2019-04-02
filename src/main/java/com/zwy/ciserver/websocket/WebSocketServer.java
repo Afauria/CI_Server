@@ -1,4 +1,4 @@
-package com.zwy.ciserver;
+package com.zwy.ciserver.websocket;
 
 import org.springframework.stereotype.Component;
 

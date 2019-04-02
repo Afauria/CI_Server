@@ -22,7 +22,7 @@ jenkins:
 
 logging:
   path: /output
-  file: aries.log
+  file: output/aries.log
 ---
 
 #开发配置

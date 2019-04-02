@@ -78,11 +78,9 @@
     <builders>
         <hudson.tasks.Shell>
             <command>
-echo $MODULE_NAME
-echo $ARR_VERSION
-echo $CATALOG
+echo 工程目录+$CATALOG
 ./gradlew --version
-python /var/jenkins_workspace/ci_script/module_build.py -m $MODULE_ID -n $MODULE_NAME -v $AAR_VERSION
+python /var/jenkins_workspace/ci_script/module_build.py -m $MODULE_ID -n $MODULE_NAME -v $AAR_VERSION -i $BUILD_NUMBER
             </command>
         </hudson.tasks.Shell>
     </builders>

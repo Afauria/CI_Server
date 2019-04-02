@@ -47,7 +47,7 @@ public class ModuleController {
     }
 
     @PostMapping("/build")
-    public Result buildModule(Integer moduleId,String version) {
-        return ResultUtil.success(mModuleService.buildModule(moduleId,version));
+    public Result buildModule(Integer moduleId, String version) {
+        return ResultUtil.success(mModuleService.buildModule(moduleId, version));
     }
 }

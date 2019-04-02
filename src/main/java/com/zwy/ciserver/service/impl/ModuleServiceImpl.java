@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.model.JobWithDetails;
 import com.zwy.ciserver.common.BuildStatus;
+import com.zwy.ciserver.common.WSEvent;
 import com.zwy.ciserver.common.utils.VersionUtil;
 import com.zwy.ciserver.dao.ModuleBuildEntityMapper;
 import com.zwy.ciserver.jenkins.JenkinsServerFactory;
@@ -13,6 +14,8 @@ import com.zwy.ciserver.dao.ModuleEntityMapper;
 import com.zwy.ciserver.entity.ModuleEntity;
 import com.zwy.ciserver.entity.ModuleBuildEntity;
 import com.zwy.ciserver.service.ModuleService;
+import com.zwy.ciserver.websocket.MessageEventHandler;
+import com.zwy.ciserver.websocket.MessageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,7 +134,7 @@ public class ModuleServiceImpl implements ModuleService {
                 throw new BusinessException(-1, "构建失败，Jenkins获取Job失败");
             }
             Map<String, String> param = new HashMap();
-            param.put("MODULE_ID", moduleEntity.getName());
+            param.put("MODULE_ID", String.valueOf(moduleId));
             param.put("MODULE_NAME", moduleEntity.getName());
             param.put("CATALOG", moduleEntity.getCatalog());
             param.put("AAR_VERSION", version);
@@ -154,5 +157,6 @@ public class ModuleServiceImpl implements ModuleService {
             mModuleEntityMapper.updateVersion(moduleBuildEntity.getModuleId(), moduleBuildEntity.getVersion());
         }
         mModuleEntityMapper.updateStatus(moduleBuildEntity.getModuleId(), moduleBuildEntity.getBuildStatus());
+        MessageEventHandler.sendAll(WSEvent.MODULE, MessageInfo.success(moduleBuildEntity.buildMsg()));
     }
 }

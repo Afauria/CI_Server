@@ -1,6 +1,7 @@
 package com.zwy.ciserver.dao;
 
 import com.zwy.ciserver.entity.ModuleEntity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface ModuleEntityMapper {
 
     void updateModule(ModuleEntity moduleEntity);
 
-    void updateStatus(int moduleId,int buildStatus);
+    void updateStatus(@Param("moduleId")int moduleId, @Param("buildStatus")int buildStatus);
 
-    void updateVersion(int moduleId,String curVersion);
+    void updateVersion(@Param("moduleId")int moduleId,@Param("curVersion")String curVersion);
 }

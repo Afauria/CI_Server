@@ -16,11 +16,14 @@ public class VersionUtil {
     }
 
     public static String nextRCVersion(String curVersion) {
+        if (curVersion == null) {
+            return "";
+        }
         Pattern pattern = Pattern.compile("rc_(\\d+)");
         Matcher matcher = pattern.matcher(curVersion);
         if (matcher.find()) {
             Integer num = Integer.parseInt(matcher.group(1)) + 1;
-            String nextVersion = curVersion.replace(matcher.group(0), "rc_"+num);
+            String nextVersion = curVersion.replace(matcher.group(0), "rc_" + num);
             return nextVersion;
         } else {
             return "";
@@ -28,6 +31,9 @@ public class VersionUtil {
     }
 
     public static String nextReleaseVersion(String curVersion) {
+        if (curVersion == null) {
+            return "";
+        }
         if (curVersion.contains("rc_")) {
             return curVersion.replaceAll("\\.rc_\\d+", "");
         } else {

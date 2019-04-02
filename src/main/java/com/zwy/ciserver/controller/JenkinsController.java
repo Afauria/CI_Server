@@ -31,6 +31,6 @@ public class JenkinsController {
     public Result handleMsg(ModuleBuildEntity moduleBuildEntity) {
         logger.info("receive jenkins message");
         mModuleService.handleBuildResult(moduleBuildEntity);
-        return ResultUtil.success("successhhhhhh");
+        return ResultUtil.success("handle jenkins message success");
     }
 }

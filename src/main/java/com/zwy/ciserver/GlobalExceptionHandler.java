@@ -5,6 +5,7 @@ import com.zwy.ciserver.common.model.Result;
 import com.zwy.ciserver.common.utils.ResultUtil;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import javax.validation.ConstraintViolationException;
 
 //开启全局异常监听
-//@ControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     private final static int DEFAULT_ERROR_CODE = 99999;
@@ -37,6 +38,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Result defaultErrorHandler(Exception ex) {
+        ex.printStackTrace();
         return ResultUtil.error(DEFAULT_ERROR_CODE, ex.getLocalizedMessage());
     }
 
@@ -44,6 +46,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Result sqlErrorHandler(DataAccessException ex) {
+        ex.printStackTrace();
         return ResultUtil.error(SQL_ERROR_CODE, ex.getCause().toString());
     }
 
@@ -57,6 +60,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public Result businessErrorHandler(BusinessException ex) {
+        ex.printStackTrace();
         return ResultUtil.error(ex.getCode(), ex.getMsg());
     }
 }

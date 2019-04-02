@@ -104,4 +104,10 @@ public class ModuleBuildEntity implements Serializable {
         sb.append("]");
         return sb.toString();
     }
+
+    public String buildMsg(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("组件").append(jobName).append("构建成功");
+        return sb.toString();
+    }
 }
