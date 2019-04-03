@@ -12,12 +12,19 @@
         <result column="descr" property="descr" jdbcType="VARCHAR"/>
         <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
         <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP"/>
+        <collection property="modules" ofType="com.zwy.ciserver.model.request.ProjectModuleReq">
+            <id property="linkId" column="id"></id>
+            <result property="moduleBuildId" column="module_build_id"/>
+            <result property="moduleName" column="module_name"></result>
+            <result property="version" column="version"></result>
+            <result property="moduleId" column="module_id"></result>
+        </collection>
     </resultMap>
     <sql id="TABLE">
         t_project
     </sql>
     <sql id="COLUMN">
-        project_id, name, repo, branch, cur_version, build_status, integrate_status, descr, gmt_create, gmt_update
+        t_project.project_id, name, repo, branch, cur_version, t_project.build_status, integrate_status, descr, t_project.gmt_create, gmt_update
     </sql>
 
     <update id="updateProject">
@@ -30,13 +37,22 @@
         where project_id = #{projectId}
     </update>
 
+    <update id="updateProjectModuleVersion">
+        update
+        t_project_module
+        <set>
+            module_build_id = #{moduleBuildId}
+        </set>
+        where id = #{linkId}
+    </update>
+
     <delete id="deleteProjectById">
         delete from
         <include refid="TABLE"/>
         where project_id = #{projectId}
     </delete>
 
-    <insert id="insertProject" parameterType="com.zwy.ciserver.entity.ModuleEntity" useGeneratedKeys="true"
+    <insert id="insertProject" parameterType="com.zwy.ciserver.entity.ProjectEntity" useGeneratedKeys="true"
             keyProperty="projectId">
         insert into
         <include refid="TABLE"/>
@@ -51,7 +67,7 @@
         <include refid="TABLE"/>
     </select>
 
-    <select id="selectProjectByName" resultType="com.zwy.ciserver.entity.ProjectEntity">
+    <select id="selectProjectByName" resultMap="BaseResultMap">
         select
         <include refid="COLUMN"/>
         from
@@ -59,12 +75,21 @@
         where name = #{name}
     </select>
 
-    <select id="selectProjectById" resultType="com.zwy.ciserver.entity.ProjectEntity">
+    <select id="selectProjectById" resultMap="BaseResultMap">
         select
         <include refid="COLUMN"/>
         from
         <include refid="TABLE"/>
         where project_id = #{projectId}
+    </select>
+
+    <!--多表查询，查询项目组件-->
+    <select id="selectProjectInfoById" resultMap="BaseResultMap">
+        select *
+        from t_project p
+            left join t_project_module pm on p.project_id = pm.project_id
+            left join t_module_build m on pm.module_build_id = m.module_build_id
+        where p.project_id = #{projectId}
     </select>
 
 </mapper>

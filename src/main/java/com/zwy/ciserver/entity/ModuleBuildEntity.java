@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ModuleBuildEntity implements Serializable {
-    private Integer id;
+    private Integer moduleBuildId;
 
     private Integer moduleId;
 
-    private String jobName;
+    private String moduleName;
 
     private Integer buildNum;
 
@@ -22,12 +22,12 @@ public class ModuleBuildEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getModuleBuildId() {
+        return moduleBuildId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setModuleBuildId(Integer moduleBuildId) {
+        this.moduleBuildId = moduleBuildId;
     }
 
     public Integer getModuleId() {
@@ -38,12 +38,12 @@ public class ModuleBuildEntity implements Serializable {
         this.moduleId = moduleId;
     }
 
-    public String getJobName() {
-        return jobName;
+    public String getModuleName() {
+        return moduleName;
     }
 
-    public void setJobName(String jobName) {
-        this.jobName = jobName == null ? null : jobName.trim();
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName == null ? null : moduleName.trim();
     }
 
     public Integer getBuildNum() {
@@ -92,9 +92,9 @@ public class ModuleBuildEntity implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
+        sb.append(", moduleBuildId=").append(moduleBuildId);
         sb.append(", moduleId=").append(moduleId);
-        sb.append(", jobName=").append(jobName);
+        sb.append(", moduleName=").append(moduleName);
         sb.append(", buildNum=").append(buildNum);
         sb.append(", buildStatus=").append(buildStatus);
         sb.append(", version=").append(version);
@@ -107,7 +107,7 @@ public class ModuleBuildEntity implements Serializable {
 
     public String buildMsg(){
         StringBuilder sb = new StringBuilder();
-        sb.append("组件").append(jobName).append("构建成功");
+        sb.append("组件").append(moduleName).append("构建成功");
         return sb.toString();
     }
 }

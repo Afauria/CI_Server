@@ -13,6 +13,18 @@
         <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
         <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP"/>
     </resultMap>
+    <parameterMap id="BaseParameterMap" type="com.zwy.ciserver.entity.ModuleEntity">
+        <parameter property="moduleId" jdbcType="INTEGER"/>
+        <parameter property="name" jdbcType="VARCHAR"/>
+        <parameter property="repo" jdbcType="VARCHAR"/>
+        <parameter property="branch" jdbcType="VARCHAR"/>
+        <parameter property="curVersion" jdbcType="VARCHAR"/>
+        <parameter property="catalog" jdbcType="VARCHAR"/>
+        <parameter property="buildStatus" jdbcType="INTEGER"/>
+        <parameter property="descr" jdbcType="VARCHAR"/>
+        <parameter property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <parameter property="gmtUpdate" jdbcType="TIMESTAMP"/>
+    </parameterMap>
     <sql id="TABLE">
         t_module
     </sql>
@@ -60,7 +72,7 @@
         <include refid="TABLE"/>
     </select>
 
-    <select id="selectModuleByName" resultType="com.zwy.ciserver.entity.ModuleEntity">
+    <select id="selectModuleByName" resultMap="BaseResultMap">
         select
         <include refid="COLUMN"/>
         from
@@ -68,7 +80,7 @@
         where name = #{name}
     </select>
 
-    <select id="selectModuleById" resultType="com.zwy.ciserver.entity.ModuleEntity">
+    <select id="selectModuleById" resultMap="BaseResultMap">
         select
         <include refid="COLUMN"/>
         from

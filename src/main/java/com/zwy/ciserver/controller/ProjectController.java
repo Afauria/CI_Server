@@ -39,4 +39,14 @@ public class ProjectController {
     public Result modifyProject(ProjectEntity projectEntity) {
         return ResultUtil.success(mProjectService.modifyProject(projectEntity));
     }
+
+    @GetMapping("/info/{projectId}")
+    public Result findProject(@PathVariable("projectId") int projectId) {
+        return ResultUtil.success(mProjectService.findProjectInfo(projectId));
+    }
+
+    @PostMapping("/modifyModuleVersion")
+    public Result modifyModuleVersion(int linkId, int moduleBuildId) {
+        return ResultUtil.success(mProjectService.modifyModuleVersion(linkId, moduleBuildId));
+    }
 }

@@ -34,17 +34,15 @@ create table if not exists t_project(
 create table if not exists t_project_module(
 	id INT primary key auto_increment,
 	project_id int,
-	module_id int,
-	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	gmt_update TIMESTAMP NULL,
+	module_build_id int,
 	FOREIGN KEY (project_id) REFERENCES t_project(project_id),
-	FOREIGN KEY (module_id) REFERENCES t_module(module_id)
+	FOREIGN KEY (module_build_id) REFERENCES t_module_build(module_build_id)
 )DEFAULT CHARSET=utf8;
 
 create table if not exists t_module_build(
-	id INT PRIMARY KEY auto_increment,
+	module_build_id INT PRIMARY KEY auto_increment,
 	module_id int NOT NULL,
-	job_name VARCHAR(30) NOT NULL,
+	module_name VARCHAR(30) NOT NULL,
 	build_num int NOT NULL,
 	build_status INT(1) DEFAULT 1,
 	version VARCHAR(10) NOT NULL,

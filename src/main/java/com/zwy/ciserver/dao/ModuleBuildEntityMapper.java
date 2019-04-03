@@ -1,7 +1,14 @@
 package com.zwy.ciserver.dao;
 
 import com.zwy.ciserver.entity.ModuleBuildEntity;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ModuleBuildEntityMapper {
     int insert(ModuleBuildEntity record);
+
+    ModuleBuildEntity selectModuleBuild(@Param("moduleId") int moduleId, @Param("version") String version);
+
+    List<ModuleBuildEntity> selectModuleBuildByModuleId(int moduleBuildId);
 }

@@ -40,14 +40,19 @@ public class ModuleController {
         return ResultUtil.success(mModuleService.modifyModule(moduleEntity));
     }
 
-    @PostMapping("/searchVersion")
-    public Result searchVersion(String curVersion, boolean rcFlag) {
-        String nextVersion = mModuleService.searchBuildVersion(curVersion, rcFlag);
+    @PostMapping("/searchNextVersion")
+    public Result searchNextVersion(String curVersion, boolean rcFlag) {
+        String nextVersion = mModuleService.searchNextVersion(curVersion, rcFlag);
         return ResultUtil.success(nextVersion);
     }
 
     @PostMapping("/build")
     public Result buildModule(Integer moduleId, String version) {
         return ResultUtil.success(mModuleService.buildModule(moduleId, version));
+    }
+
+    @PostMapping("/searchVersions")
+    public Result searchVersions(Integer moduleId) {
+        return ResultUtil.success(mModuleService.searchVersions(moduleId));
     }
 }

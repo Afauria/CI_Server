@@ -1,7 +1,10 @@
 package com.zwy.ciserver.entity;
 
+import com.zwy.ciserver.model.request.ProjectModuleReq;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class ProjectEntity implements Serializable {
     private Integer projectId;
@@ -23,6 +26,8 @@ public class ProjectEntity implements Serializable {
     private Date gmtCreate;
 
     private Date gmtUpdate;
+
+    private List<ProjectModuleReq> modules;
 
     private static final long serialVersionUID = 1L;
 
@@ -104,6 +109,14 @@ public class ProjectEntity implements Serializable {
 
     public void setGmtUpdate(Date gmtUpdate) {
         this.gmtUpdate = gmtUpdate;
+    }
+
+    public List<ProjectModuleReq> getModules() {
+        return modules;
+    }
+
+    public void setModules(List<ProjectModuleReq> modules) {
+        this.modules = modules;
     }
 
     @Override

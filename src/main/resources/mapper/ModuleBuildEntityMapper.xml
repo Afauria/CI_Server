@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zwy.ciserver.dao.ModuleBuildEntityMapper">
     <resultMap id="BaseResultMap" type="com.zwy.ciserver.entity.ModuleBuildEntity">
-        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="module_build_id" property="moduleBuildId" jdbcType="INTEGER"/>
         <result column="module_id" property="moduleId" jdbcType="INTEGER"/>
-        <result column="job_name" property="jobName" jdbcType="VARCHAR"/>
+        <result column="module_name" property="moduleName" jdbcType="VARCHAR"/>
         <result column="build_num" property="buildNum" jdbcType="INTEGER"/>
         <result column="build_status" property="buildStatus" jdbcType="INTEGER"/>
         <result column="version" property="version" jdbcType="VARCHAR"/>
@@ -15,12 +15,27 @@
         t_module_build
     </sql>
     <sql id="COLUMN">
-        id, module_id, build_num, job_name, build_status, version, message, gmt_create
+        module_build_id, module_id, build_num, module_name, build_status, version, message, gmt_create
     </sql>
     <insert id="insert" parameterType="com.zwy.ciserver.entity.ModuleBuildEntity">
         insert into
         <include refid="TABLE"/>
-        (module_id, job_name, build_num, build_status, version, message)
-        values (#{moduleId}, #{jobName}, #{buildNum}, #{buildStatus}, #{version}, #{message})
+        (module_id, module_name, build_num, build_status, version, message)
+        values (#{moduleId}, #{moduleName}, #{buildNum}, #{buildStatus}, #{version}, #{message})
     </insert>
+    <select id="selectModuleBuild" resultMap="BaseResultMap">
+        select
+        <include refid="COLUMN"/>
+        from
+        <include refid="TABLE"/>
+        where module_id = #{moduleId} and version = #{version}
+    </select>
+
+    <select id="selectModuleBuildByModuleId" resultMap="BaseResultMap">
+        select
+        <include refid="COLUMN"/>
+        from
+        <include refid="TABLE"/>
+        where module_id = #{moduleId}
+    </select>
 </mapper>

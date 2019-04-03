@@ -3,8 +3,10 @@ package com.zwy.ciserver.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.zwy.ciserver.common.exception.BusinessException;
+import com.zwy.ciserver.dao.ModuleBuildEntityMapper;
 import com.zwy.ciserver.dao.ProjectEntityMapper;
 import com.zwy.ciserver.entity.ProjectEntity;
+import com.zwy.ciserver.model.request.ProjectModuleReq;
 import com.zwy.ciserver.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectEntityMapper mProjectEntityMapper;
+    @Autowired
+    private ModuleBuildEntityMapper mModuleBuildEntityMapper;
 
     @Override
     public PageInfo<ProjectEntity> listProjects(int pageNum, int pageSize) {
@@ -52,5 +56,19 @@ public class ProjectServiceImpl implements ProjectService {
         }
         mProjectEntityMapper.updateProject(projectEntity);
         return projectEntity;
+    }
+
+    @Override
+    public ProjectEntity findProjectInfo(int projectId) {
+        ProjectEntity projectEntity;
+        if ((projectEntity = mProjectEntityMapper.selectProjectInfoById(projectId)) == null) {
+            throw new BusinessException(-1, "项目不存在！");
+        }
+        return projectEntity;
+    }
+
+    @Override
+    public boolean modifyModuleVersion(int linkId, int moduleBuildId) {
+        return mProjectEntityMapper.updateProjectModuleVersion(linkId, moduleBuildId);
     }
 }

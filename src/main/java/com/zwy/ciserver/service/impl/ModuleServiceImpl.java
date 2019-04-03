@@ -114,7 +114,7 @@ public class ModuleServiceImpl implements ModuleService {
     }
 
     @Override
-    public String searchBuildVersion(String curVersion, boolean rcFlag) {
+    public String searchNextVersion(String curVersion, boolean rcFlag) {
         if (rcFlag) {
             return VersionUtil.nextRCVersion(curVersion);
         } else {
@@ -128,6 +128,9 @@ public class ModuleServiceImpl implements ModuleService {
         ModuleEntity moduleEntity;
         if ((moduleEntity = mModuleEntityMapper.selectModuleById(moduleId)) == null) {
             throw new BusinessException(-1, "构建失败，组件不存在");
+        }
+        if(mModuleBuildEntityMapper.selectModuleBuild(moduleId,version)!=null){
+            throw new BusinessException(-1, "构建失败，版本已存在");
         }
         mModuleEntityMapper.updateStatus(moduleId, BuildStatus.BUILDING);
         try {
@@ -161,5 +164,10 @@ public class ModuleServiceImpl implements ModuleService {
         }
         mModuleEntityMapper.updateStatus(moduleBuildEntity.getModuleId(), moduleBuildEntity.getBuildStatus());
         MessageEventHandler.sendAll(WSEvent.MODULE, MessageInfo.success(moduleBuildEntity.buildMsg()));
+    }
+
+    @Override
+    public List<ModuleBuildEntity> searchVersions(int moduleId) {
+        return mModuleBuildEntityMapper.selectModuleBuildByModuleId(moduleId);
     }
 }

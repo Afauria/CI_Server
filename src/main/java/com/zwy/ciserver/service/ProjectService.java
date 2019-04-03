@@ -14,4 +14,8 @@ public interface ProjectService {
     int removeModuleById(int projectId);
 
     ProjectEntity modifyProject(ProjectEntity projectEntity);
+
+    ProjectEntity findProjectInfo(int projectId);
+
+    boolean modifyModuleVersion(int linkId, int moduleBuildId);
 }
