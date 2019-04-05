@@ -1,13 +1,12 @@
-package com.zwy.ciserver.model.request;
+package com.zwy.ciserver.model.response;
 
 import java.io.Serializable;
 
 /**
  * Created by Afauria on 2019/4/4.
  */
-public class ProjectModuleReq implements Serializable {
+public class ProjectModuleResp implements Serializable {
     private static final long serialVersionUID = 1L;
-    private int linkId;
     private int moduleBuildId;
     private int projectId;
     private int moduleId;
@@ -28,14 +27,6 @@ public class ProjectModuleReq implements Serializable {
 
     public void setModuleBuildId(int moduleBuildId) {
         this.moduleBuildId = moduleBuildId;
-    }
-
-    public int getLinkId() {
-        return linkId;
-    }
-
-    public void setLinkId(int linkId) {
-        this.linkId = linkId;
     }
 
     public int getProjectId() {

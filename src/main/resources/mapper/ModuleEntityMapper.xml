@@ -13,6 +13,10 @@
         <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
         <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP"/>
     </resultMap>
+    <resultMap id="ModulesNameMap" type="com.zwy.ciserver.model.response.ModulesNameResp">
+        <result column="module_id" property="moduleId"/>
+        <result column="name" property="name"/>
+    </resultMap>
     <parameterMap id="BaseParameterMap" type="com.zwy.ciserver.entity.ModuleEntity">
         <parameter property="moduleId" jdbcType="INTEGER"/>
         <parameter property="name" jdbcType="VARCHAR"/>
@@ -45,7 +49,7 @@
         update
         <include refid="TABLE"/>
         <set>
-           build_status = #{buildStatus}
+            build_status = #{buildStatus}
         </set>
         where module_id = #{moduleId}
     </update>
@@ -87,7 +91,19 @@
         <include refid="TABLE"/>
         where module_id = #{moduleId}
     </select>
-<!--useGeneratedKeys="true" keyProperty="moduleId" 返回新增加的主键倒moduleId属性中-->
+
+    <select id="selectEnableModulesName" resultMap="ModulesNameMap">
+        select `name`, module_id from
+        <include refid="TABLE"/>
+        where
+        #筛选出项目没有的组件
+        module_id not in (select module_id from t_project_module natural join t_module_build where project_id = #{projectId})
+        #筛选出构建过的组件
+        and module_id in (select module_id from t_module_build)
+        order by `name`
+    </select>
+
+    <!--useGeneratedKeys="true" keyProperty="moduleId" 返回新增加的主键倒moduleId属性中-->
     <insert id="insertModule" parameterType="com.zwy.ciserver.entity.ModuleEntity" useGeneratedKeys="true"
             keyProperty="moduleId">
         insert into

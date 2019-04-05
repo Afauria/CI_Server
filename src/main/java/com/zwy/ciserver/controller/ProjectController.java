@@ -41,12 +41,22 @@ public class ProjectController {
     }
 
     @GetMapping("/info/{projectId}")
-    public Result findProject(@PathVariable("projectId") int projectId) {
+    public Result findProjectInfo(@PathVariable("projectId") int projectId) {
         return ResultUtil.success(mProjectService.findProjectInfo(projectId));
     }
 
-    @PostMapping("/modifyModuleVersion")
-    public Result modifyModuleVersion(int linkId, int moduleBuildId) {
-        return ResultUtil.success(mProjectService.modifyModuleVersion(linkId, moduleBuildId));
+    @PostMapping("/modules/list")
+    public Result findProjectModule(int projectId){
+        return ResultUtil.success(mProjectService.findProjectModule(projectId));
+    }
+
+    @PostMapping("/modules/add")
+    public Result addProjectModule(int projectId,int moduleBuildId){
+        return ResultUtil.success(mProjectService.addProjectModule(projectId,moduleBuildId));
+    }
+
+    @PostMapping("/modules/remove")
+    public Result removeProjectModule(int projectId,int moduleBuildId){
+        return ResultUtil.success(mProjectService.removeProjectModule(projectId,moduleBuildId));
     }
 }

@@ -55,4 +55,9 @@ public class ModuleController {
     public Result searchVersions(Integer moduleId) {
         return ResultUtil.success(mModuleService.searchVersions(moduleId));
     }
+
+    @PostMapping("/searchEnableModulesName")
+    public Result searchEnableModulesName(int projectId){
+        return ResultUtil.success(mModuleService.searchEnableModulesName(projectId));
+    }
 }

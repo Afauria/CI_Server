@@ -6,7 +6,7 @@ import com.zwy.ciserver.common.exception.BusinessException;
 import com.zwy.ciserver.dao.ModuleBuildEntityMapper;
 import com.zwy.ciserver.dao.ProjectEntityMapper;
 import com.zwy.ciserver.entity.ProjectEntity;
-import com.zwy.ciserver.model.request.ProjectModuleReq;
+import com.zwy.ciserver.model.response.ProjectModuleResp;
 import com.zwy.ciserver.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,14 +61,28 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectEntity findProjectInfo(int projectId) {
         ProjectEntity projectEntity;
-        if ((projectEntity = mProjectEntityMapper.selectProjectInfoById(projectId)) == null) {
+        if ((projectEntity = mProjectEntityMapper.selectProjectById(projectId)) == null) {
             throw new BusinessException(-1, "项目不存在！");
         }
         return projectEntity;
     }
 
     @Override
-    public boolean modifyModuleVersion(int linkId, int moduleBuildId) {
-        return mProjectEntityMapper.updateProjectModuleVersion(linkId, moduleBuildId);
+    public List<ProjectModuleResp> findProjectModule(int projectId){
+        return mProjectEntityMapper.selectProjectModuleById(projectId);
+    }
+
+    @Override
+    public boolean addProjectModule(int projectId, int moduleBuildId) {
+        Integer linkId;
+        if((linkId=mProjectEntityMapper.selectLink(projectId,moduleBuildId))!=null){
+            return mProjectEntityMapper.updateProjectModule(linkId, projectId,moduleBuildId);
+        }else{
+            return mProjectEntityMapper.addProjectModule(projectId,moduleBuildId);
+        }
+    }
+    @Override
+    public boolean removeProjectModule(int projectId, int moduleBuildId) {
+        return mProjectEntityMapper.deleteProjectModule(projectId,moduleBuildId);
     }
 }

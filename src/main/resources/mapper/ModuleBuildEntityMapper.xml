@@ -31,7 +31,7 @@
         where module_id = #{moduleId} and version = #{version}
     </select>
 
-    <select id="selectModuleBuildByModuleId" resultMap="BaseResultMap">
+    <select id="selectModulesBuildByModuleId" resultMap="BaseResultMap">
         select
         <include refid="COLUMN"/>
         from

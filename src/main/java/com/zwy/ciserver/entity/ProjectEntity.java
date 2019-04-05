@@ -1,10 +1,7 @@
 package com.zwy.ciserver.entity;
 
-import com.zwy.ciserver.model.request.ProjectModuleReq;
-
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 public class ProjectEntity implements Serializable {
     private Integer projectId;
@@ -26,8 +23,8 @@ public class ProjectEntity implements Serializable {
     private Date gmtCreate;
 
     private Date gmtUpdate;
-
-    private List<ProjectModuleReq> modules;
+//使用list用于一对多查询，配合Mapper的collections标签使用（多对多可以看作两个一对多）
+//    private List<ProjectModuleResp> modules;
 
     private static final long serialVersionUID = 1L;
 
@@ -110,14 +107,14 @@ public class ProjectEntity implements Serializable {
     public void setGmtUpdate(Date gmtUpdate) {
         this.gmtUpdate = gmtUpdate;
     }
-
-    public List<ProjectModuleReq> getModules() {
-        return modules;
-    }
-
-    public void setModules(List<ProjectModuleReq> modules) {
-        this.modules = modules;
-    }
+//
+//    public List<ProjectModuleResp> getModules() {
+//        return modules;
+//    }
+//
+//    public void setModules(List<ProjectModuleResp> modules) {
+//        this.modules = modules;
+//    }
 
     @Override
     public String toString() {

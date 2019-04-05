@@ -1,6 +1,7 @@
 package com.zwy.ciserver.dao;
 
 import com.zwy.ciserver.entity.ProjectEntity;
+import com.zwy.ciserver.model.response.ProjectModuleResp;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,11 +16,17 @@ public interface ProjectEntityMapper {
 
     ProjectEntity selectProjectById(int projectId);
 
-    ProjectEntity selectProjectInfoById(int projectId);
+    List<ProjectModuleResp> selectProjectModuleById(int projectId);
 
     void deleteProjectById(int projectId);
 
     void updateProject(ProjectEntity projectEntity);
 
-    boolean updateProjectModuleVersion(@Param("linkId") int linkId, @Param("moduleBuildId") int moduleBuildId);
+    boolean addProjectModule(@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId);
+
+    boolean deleteProjectModule(@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId);
+
+    Integer selectLink(@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId);
+
+    boolean updateProjectModule(@Param("linkId") int linkId,@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId);
 }

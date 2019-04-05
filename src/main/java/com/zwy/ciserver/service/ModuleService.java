@@ -3,6 +3,7 @@ package com.zwy.ciserver.service;
 import com.github.pagehelper.PageInfo;
 import com.zwy.ciserver.entity.ModuleBuildEntity;
 import com.zwy.ciserver.entity.ModuleEntity;
+import com.zwy.ciserver.model.response.ModulesNameResp;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface ModuleService {
     void handleBuildResult(ModuleBuildEntity moduleBuildEntity);
 
     List<ModuleBuildEntity> searchVersions(int moduleBuildId);
+
+    List<ModulesNameResp> searchEnableModulesName(int projectId);
 }

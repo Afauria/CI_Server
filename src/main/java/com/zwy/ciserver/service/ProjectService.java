@@ -2,6 +2,9 @@ package com.zwy.ciserver.service;
 
 import com.github.pagehelper.PageInfo;
 import com.zwy.ciserver.entity.ProjectEntity;
+import com.zwy.ciserver.model.response.ProjectModuleResp;
+
+import java.util.List;
 
 /**
  * Created by Afauria on 2019/4/2.
@@ -17,5 +20,9 @@ public interface ProjectService {
 
     ProjectEntity findProjectInfo(int projectId);
 
-    boolean modifyModuleVersion(int linkId, int moduleBuildId);
+    List<ProjectModuleResp> findProjectModule(int projectId);
+
+    boolean addProjectModule(int projectId, int moduleBuildId);
+
+    boolean removeProjectModule(int projectId, int moduleBuildId);
 }

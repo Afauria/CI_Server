@@ -12,14 +12,25 @@
         <result column="descr" property="descr" jdbcType="VARCHAR"/>
         <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
         <result column="gmt_update" property="gmtUpdate" jdbcType="TIMESTAMP"/>
-        <collection property="modules" ofType="com.zwy.ciserver.model.request.ProjectModuleReq">
-            <id property="linkId" column="id"></id>
-            <result property="moduleBuildId" column="module_build_id"/>
-            <result property="moduleName" column="module_name"></result>
-            <result property="version" column="version"></result>
-            <result property="moduleId" column="module_id"></result>
-        </collection>
+        <!--连表查询项目组件，将项目组件作为项目的List。-->
+        <!--多表关联查询可以分为不同子表的查询，语句更简单-->
+        <!--这里分开查询，细分业务，前端可以一次请求由Service层组装数据。也分两次请求。-->
+        <!--<collection property="modules" ofType="com.zwy.ciserver.model.response.ProjectModuleResp">-->
+        <!--<id property="linkId" column="id"></id>-->
+        <!--<result property="moduleBuildId" column="module_build_id"/>-->
+        <!--<result property="moduleName" column="module_name"></result>-->
+        <!--<result property="version" column="version"></result>-->
+        <!--<result property="moduleId" column="module_id"></result>-->
+        <!--</collection>-->
     </resultMap>
+    <resultMap id="ProjectModulesMap" type="com.zwy.ciserver.model.response.ProjectModuleResp">
+        <result property="moduleBuildId" column="module_build_id"/>
+        <result property="moduleName" column="module_name"></result>
+        <result property="version" column="version"></result>
+        <result property="projectId" column="project_id"></result>
+        <result property="moduleId" column="module_id"></result>
+    </resultMap>
+
     <sql id="TABLE">
         t_project
     </sql>
@@ -37,14 +48,10 @@
         where project_id = #{projectId}
     </update>
 
-    <update id="updateProjectModuleVersion">
-        update
-        t_project_module
-        <set>
-            module_build_id = #{moduleBuildId}
-        </set>
-        where id = #{linkId}
-    </update>
+    <delete id="deleteProjectModule">
+        delete from t_project_module
+        where project_id = #{projectId} and module_build_id = #{moduleBuildId}
+    </delete>
 
     <delete id="deleteProjectById">
         delete from
@@ -83,13 +90,44 @@
         where project_id = #{projectId}
     </select>
 
-    <!--多表查询，查询项目组件-->
-    <select id="selectProjectInfoById" resultMap="BaseResultMap">
+    <!--多表查询，查询项目组件，使用左连接，保留t_project的元组-->
+    <!--不能使用natural join，因为gmt_create属性也是共有的，需要手动指定等值的列-->
+    <!--<select id="selectProjectModuleById" resultMap="BaseResultMap">-->
+    <!--select *-->
+    <!--from t_project p-->
+    <!--left join t_project_module pm on p.project_id = pm.project_id-->
+    <!--left join t_module_build m on pm.module_build_id = m.module_build_id-->
+    <!--where p.project_id = #{projectId}-->
+    <!--</select>-->
+
+    <!--查询该项目的所有组件-->
+    <select id="selectProjectModuleById" resultMap="ProjectModulesMap">
         select *
-        from t_project p
-            left join t_project_module pm on p.project_id = pm.project_id
-            left join t_module_build m on pm.module_build_id = m.module_build_id
+        from t_project_module p natural join t_module_build
         where p.project_id = #{projectId}
     </select>
 
+    <!--添加关联关系-->
+    <insert id="addProjectModule">
+        insert into t_project_module
+        (project_id, module_build_id)
+        values (#{projectId}, #{moduleBuildId})
+    </insert>
+    <!--插入项目组件关联前先判断是否存在关联关系，返回关联关系id-->
+    <select id="selectLink" resultType="java.lang.Integer">
+        select id
+        from t_project_module
+            natural join t_module_build
+        where project_id = #{projectId}
+              and module_id in
+                  (select module_id from t_module_build where module_build_id = #{moduleBuildId})
+    </select>
+    <!--如果已经存在关联，则修改关联关系-->
+    <update id="updateProjectModule">
+        update t_project_module
+        <set>
+            project_id = #{projectId}, module_build_id = #{moduleBuildId}
+        </set>
+        where id = #{linkId}
+    </update>
 </mapper>

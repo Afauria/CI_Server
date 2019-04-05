@@ -6,13 +6,14 @@ import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.model.JobWithDetails;
 import com.zwy.ciserver.common.BuildStatus;
 import com.zwy.ciserver.common.WSEvent;
+import com.zwy.ciserver.common.exception.BusinessException;
 import com.zwy.ciserver.common.utils.VersionUtil;
 import com.zwy.ciserver.dao.ModuleBuildEntityMapper;
-import com.zwy.ciserver.jenkins.JenkinsServerFactory;
-import com.zwy.ciserver.common.exception.BusinessException;
 import com.zwy.ciserver.dao.ModuleEntityMapper;
-import com.zwy.ciserver.entity.ModuleEntity;
 import com.zwy.ciserver.entity.ModuleBuildEntity;
+import com.zwy.ciserver.entity.ModuleEntity;
+import com.zwy.ciserver.jenkins.JenkinsServerFactory;
+import com.zwy.ciserver.model.response.ModulesNameResp;
 import com.zwy.ciserver.service.ModuleService;
 import com.zwy.ciserver.websocket.MessageEventHandler;
 import com.zwy.ciserver.websocket.MessageInfo;
@@ -168,6 +169,11 @@ public class ModuleServiceImpl implements ModuleService {
 
     @Override
     public List<ModuleBuildEntity> searchVersions(int moduleId) {
-        return mModuleBuildEntityMapper.selectModuleBuildByModuleId(moduleId);
+        return mModuleBuildEntityMapper.selectModulesBuildByModuleId(moduleId);
+    }
+    //排除项目已经添加的组件
+    @Override
+    public List<ModulesNameResp> searchEnableModulesName(int projectId){
+        return mModuleEntityMapper.selectEnableModulesName(projectId);
     }
 }

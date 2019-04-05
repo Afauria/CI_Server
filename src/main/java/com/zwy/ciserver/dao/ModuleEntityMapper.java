@@ -1,6 +1,7 @@
 package com.zwy.ciserver.dao;
 
 import com.zwy.ciserver.entity.ModuleEntity;
+import com.zwy.ciserver.model.response.ModulesNameResp;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface ModuleEntityMapper {
     void updateStatus(@Param("moduleId")int moduleId, @Param("buildStatus")int buildStatus);
 
     void updateVersion(@Param("moduleId")int moduleId,@Param("curVersion")String curVersion);
+
+    List<ModulesNameResp> selectEnableModulesName(int projectId);
 }
