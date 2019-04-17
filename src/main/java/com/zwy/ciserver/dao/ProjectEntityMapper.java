@@ -22,11 +22,13 @@ public interface ProjectEntityMapper {
 
     void updateProject(ProjectEntity projectEntity);
 
-    boolean addProjectModule(@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId);
+    boolean addProjectModule(@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId,@Param("type") int type);
 
     boolean deleteProjectModule(@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId);
 
     Integer selectLink(@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId);
 
-    boolean updateProjectModule(@Param("linkId") int linkId,@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId);
+    boolean updateProjectModule(@Param("linkId") int linkId,@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId,@Param("type") int type);
+
+    void updateStatus(@Param("projectId")int projectId, @Param("buildStatus")int buildStatus);
 }

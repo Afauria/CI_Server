@@ -29,6 +29,7 @@
         <result property="version" column="version"></result>
         <result property="projectId" column="project_id"></result>
         <result property="moduleId" column="module_id"></result>
+        <result property="type" column="type"></result>
     </resultMap>
 
     <sql id="TABLE">
@@ -47,11 +48,6 @@
         </set>
         where project_id = #{projectId}
     </update>
-
-    <delete id="deleteProjectModule">
-        delete from t_project_module
-        where project_id = #{projectId} and module_build_id = #{moduleBuildId}
-    </delete>
 
     <delete id="deleteProjectById">
         delete from
@@ -107,11 +103,18 @@
         where p.project_id = #{projectId}
     </select>
 
+    <update id="updateStatus">
+        update
+        <include refid="TABLE"/>
+        set build_status = #{buildStatus}
+        where project_id = #{projectId}
+    </update>
+
     <!--添加关联关系-->
     <insert id="addProjectModule">
         insert into t_project_module
-        (project_id, module_build_id)
-        values (#{projectId}, #{moduleBuildId})
+        (project_id, module_build_id, type)
+        values (#{projectId}, #{moduleBuildId}, #{type})
     </insert>
     <!--插入项目组件关联前先判断是否存在关联关系，返回关联关系id-->
     <select id="selectLink" resultType="java.lang.Integer">
@@ -120,14 +123,22 @@
             natural join t_module_build
         where project_id = #{projectId}
               and module_id in
-                  (select module_id from t_module_build where module_build_id = #{moduleBuildId})
+                  (select module_id
+                   from t_module_build
+                   where module_build_id = #{moduleBuildId})
     </select>
     <!--如果已经存在关联，则修改关联关系-->
     <update id="updateProjectModule">
         update t_project_module
         <set>
-            project_id = #{projectId}, module_build_id = #{moduleBuildId}
+            project_id = #{projectId}, module_build_id = #{moduleBuildId},
+            <if test="type != null">type = #{type}</if>
         </set>
         where id = #{linkId}
     </update>
+    <!--删除关联关系-->
+    <delete id="deleteProjectModule">
+        delete from t_project_module
+        where project_id = #{projectId} and module_build_id = #{moduleBuildId}
+    </delete>
 </mapper>

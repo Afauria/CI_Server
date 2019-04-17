@@ -3,18 +3,16 @@ package com.zwy.ciserver.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class ModuleBuildEntity implements Serializable {
-    private Integer moduleBuildId;
+public class ProjectBuildEntity implements Serializable {
+    private Integer projectBuildId;
 
-    private Integer moduleId;
+    private Integer projectId;
 
-    private String moduleName;
+    private String projectName;
 
     private Integer buildNum;
 
     private Integer buildStatus;
-
-    private String version;
 
     private String message;
 
@@ -22,28 +20,28 @@ public class ModuleBuildEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getModuleBuildId() {
-        return moduleBuildId;
+    public Integer getProjectBuildId() {
+        return projectBuildId;
     }
 
-    public void setModuleBuildId(Integer moduleBuildId) {
-        this.moduleBuildId = moduleBuildId;
+    public void setProjectBuildId(Integer projectBuildId) {
+        this.projectBuildId = projectBuildId;
     }
 
-    public Integer getModuleId() {
-        return moduleId;
+    public Integer getProjectId() {
+        return projectId;
     }
 
-    public void setModuleId(Integer moduleId) {
-        this.moduleId = moduleId;
+    public void setProjectId(Integer projectId) {
+        this.projectId = projectId;
     }
 
-    public String getModuleName() {
-        return moduleName;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName == null ? null : moduleName.trim();
+    public void setProjectName(String projectName) {
+        this.projectName = projectName == null ? null : projectName.trim();
     }
 
     public Integer getBuildNum() {
@@ -60,14 +58,6 @@ public class ModuleBuildEntity implements Serializable {
 
     public void setBuildStatus(Integer buildStatus) {
         this.buildStatus = buildStatus;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version == null ? null : version.trim();
     }
 
     public String getMessage() {
@@ -92,12 +82,11 @@ public class ModuleBuildEntity implements Serializable {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", moduleBuildId=").append(moduleBuildId);
-        sb.append(", moduleId=").append(moduleId);
-        sb.append(", moduleName=").append(moduleName);
+        sb.append(", projectBuildId=").append(projectBuildId);
+        sb.append(", projectId=").append(projectId);
+        sb.append(", projectName=").append(projectName);
         sb.append(", buildNum=").append(buildNum);
         sb.append(", buildStatus=").append(buildStatus);
-        sb.append(", version=").append(version);
         sb.append(", message=").append(message);
         sb.append(", gmtCreate=").append(gmtCreate);
         sb.append(", serialVersionUID=").append(serialVersionUID);
@@ -105,10 +94,9 @@ public class ModuleBuildEntity implements Serializable {
         return sb.toString();
     }
 
-    public String buildMsg() {
+    public String buildMsg(){
         StringBuilder sb = new StringBuilder();
-        sb.append("组件").append(moduleName);
-        sb.append(getMessage());
+        sb.append("项目").append(projectName).append("构建成功");
         return sb.toString();
     }
 }

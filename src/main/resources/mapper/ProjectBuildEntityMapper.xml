@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zwy.ciserver.dao.ProjectBuildEntityMapper">
+    <resultMap id="BaseResultMap" type="com.zwy.ciserver.entity.ProjectBuildEntity">
+        <result column="project_build_id" property="projectBuildId" jdbcType="INTEGER"/>
+        <result column="project_id" property="projectId" jdbcType="INTEGER"/>
+        <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
+        <result column="build_num" property="buildNum" jdbcType="INTEGER"/>
+        <result column="build_status" property="buildStatus" jdbcType="INTEGER"/>
+        <result column="message" property="message" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="TABLE">
+        t_project_build
+    </sql>
+    <sql id="COLUMN">
+        project_build_id, project_id, build_num, project_name, build_status, message, gmt_create
+    </sql>
+    <insert id="insert" parameterType="com.zwy.ciserver.entity.ProjectBuildEntity">
+        insert into
+        <include refid="TABLE"/>
+        (project_build_id, project_id, project_name,build_num, build_status, message)
+        values (#{projectBuildId}, #{projectId}, #{projectName}, #{buildNum}, #{buildStatus}, #{message})
+    </insert>
+    <select id="selectProjectBuilds" resultMap="BaseResultMap">
+        select
+        <include refid="COLUMN"/>
+        from
+        <include refid="TABLE"/>
+        where project_id = #{projectId}
+    </select>
+    <select id="selectProjectBuildById" resultMap="BaseResultMap">
+        select
+        <include refid="COLUMN"/>
+        from
+        <include refid="TABLE"/>
+        where project_build_id = #{projectBuildId}
+    </select>
+</mapper>

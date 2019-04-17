@@ -1,6 +1,7 @@
 package com.zwy.ciserver.service;
 
 import com.github.pagehelper.PageInfo;
+import com.zwy.ciserver.entity.ProjectBuildEntity;
 import com.zwy.ciserver.entity.ProjectEntity;
 import com.zwy.ciserver.model.response.ProjectModuleResp;
 
@@ -22,7 +23,15 @@ public interface ProjectService {
 
     List<ProjectModuleResp> findProjectModule(int projectId);
 
-    boolean addProjectModule(int projectId, int moduleBuildId);
+    boolean addProjectModule(int projectId, int moduleBuildId,int type);
 
     boolean removeProjectModule(int projectId, int moduleBuildId);
+
+    boolean buildProject(int projectId);
+
+    void handleBuildResult(ProjectBuildEntity projectBuildEntity);
+
+    PageInfo<ProjectBuildEntity> findProjectBuildHistory(int projectId, int pageNum, int pageSize);
+
+    String findProjectBuildReport(int buildId);
 }

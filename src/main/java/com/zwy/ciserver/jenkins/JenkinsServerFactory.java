@@ -2,7 +2,9 @@ package com.zwy.ciserver.jenkins;
 
 import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.model.FolderJob;
+import com.zwy.ciserver.common.exception.BusinessException;
 import com.zwy.ciserver.entity.ModuleEntity;
+import com.zwy.ciserver.entity.ProjectEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -50,19 +54,25 @@ public class JenkinsServerFactory {
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
-        Resource resource = new ClassPathResource("jobtemplates/module_job.xml");
+        mModuleJobTemplate = readTemplateResource("jobtemplates/module_job.xml");
+        mProjectJobTemplate = readTemplateResource("jobtemplates/project_job.xml");
+    }
+
+    private String readTemplateResource(String path) {
+        Resource resource = new ClassPathResource(path);
+        StringBuilder sb = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-            StringBuilder sb = new StringBuilder();
             String s;
             while ((s = br.readLine()) != null) {
                 sb.append(s + "\n");
             }
             br.close();
-            mModuleJobTemplate = new String(sb.toString().getBytes(), "UTF-8");
+            return new String(sb.toString().getBytes(), "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private JenkinsServerFactory() {
@@ -84,7 +94,7 @@ public class JenkinsServerFactory {
     //[\s\S]*：匹配所有字符。\s空白符，\S非空白符
     public String generateModuleConfig(ModuleEntity moduleEntity) {
         String jobXml = mModuleJobTemplate;
-        jobXml = replaceByLabel("displayName", moduleEntity.getCatalog() + "_" + moduleEntity.getName(), jobXml);
+        jobXml = replaceByLabel("displayName", moduleEntity.getCatalog() + ":" + moduleEntity.getName(), jobXml);
         jobXml = replaceByLabel("url", moduleEntity.getRepo(), jobXml);
         jobXml = replaceByLabel("branch", moduleEntity.getBranch(), jobXml);
         jobXml = replaceByLabel("customWorkspace", "/var/jenkins_workspace/" + moduleEntity.getCatalog(), jobXml);
@@ -99,8 +109,24 @@ public class JenkinsServerFactory {
         return source.replaceAll(pattern, replace);
     }
 
-    public String generateProjectConfig() {
-        return mProjectJobTemplate;
+    public String generateProjectConfig(ProjectEntity projectEntity) {
+        String jobXml = mProjectJobTemplate;
+        jobXml = replaceByLabel("displayName", projectEntity.getName(), jobXml);
+        jobXml = replaceByLabel("url", projectEntity.getRepo(), jobXml);
+        jobXml = replaceByLabel("branch", projectEntity.getBranch(), jobXml);
+//        https://github.com/moon-lights/CIDemo_AppShell.git
+        String regex = "/([^/]*)\\.git";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(projectEntity.getRepo());
+        String catalog = null;
+        while (matcher.find()) {
+            catalog = matcher.group(1);
+        }
+        if (catalog == null) {
+            throw new BusinessException(-1, "仓库地址不合法");
+        }
+        jobXml = replaceByLabel("customWorkspace", "/var/jenkins_workspace/" + catalog, jobXml);
+        return jobXml;
     }
 
     public FolderJob getModuleFolderJob() {
@@ -110,5 +136,4 @@ public class JenkinsServerFactory {
     public FolderJob getProjectFolderJob() {
         return projectFolderJob;
     }
-
 }

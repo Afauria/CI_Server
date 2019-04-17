@@ -9,6 +9,6 @@ public interface ModuleBuildEntityMapper {
     int insert(ModuleBuildEntity record);
 
     ModuleBuildEntity selectModuleBuild(@Param("moduleId") int moduleId, @Param("version") String version);
-    ModuleBuildEntity selectModuleBuildById(int linkId);
+//    ModuleBuildEntity selectModuleBuildById(int linkId);
     List<ModuleBuildEntity> selectModulesBuildByModuleId(int moduleBuildId);
 }

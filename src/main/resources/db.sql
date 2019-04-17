@@ -35,7 +35,8 @@ create table if not exists t_project_module(
 	id INT primary key auto_increment,
 	project_id int,
 	module_build_id int,
-	FOREIGN KEY (project_id) REFERENCES t_project(project_id),
+	type int,
+	FOREIGN KEY (project_id) REFERENCES t_project(project_id) ON DELETE CASCADE,
 	FOREIGN KEY (module_build_id) REFERENCES t_module_build(module_build_id)
 )DEFAULT CHARSET=utf8;
 
@@ -49,4 +50,15 @@ create table if not exists t_module_build(
 	message VARCHAR(100),
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (module_id) REFERENCES t_module(module_id)
+)DEFAULT CHARSET=utf8;
+
+create table if not exists t_project_build(
+	project_build_id INT PRIMARY KEY auto_increment,
+	project_id int NOT NULL,
+	project_name VARCHAR(30) NOT NULL,
+	build_num int NOT NULL,
+	build_status INT(1) DEFAULT 1,
+	message VARCHAR(100),
+	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (project_id) REFERENCES t_project(project_id)
 )DEFAULT CHARSET=utf8;

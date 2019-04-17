@@ -54,9 +54,12 @@
         <!--<table tableName="t_module" domainObjectName="ModuleEntity" enableCountByExample="false" enableUpdateByExample="false"-->
                <!--enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"-->
         <!--&gt;</table>-->
-        <table tableName="t_module_build" domainObjectName="ModuleBuildEntity" enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
-        ></table>
+        <!--<table tableName="t_module_build" domainObjectName="ModuleBuildEntity" enableCountByExample="false" enableUpdateByExample="false"-->
+               <!--enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"-->
+        <!--&gt;</table>-->
+        <table tableName="t_project_build" domainObjectName="ProjectBuildEntity" enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+        </table>
         <!--<table tableName="t_project" domainObjectName="ProjectEntity" enableCountByExample="false" enableUpdateByExample="false"-->
                <!--enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"-->
         <!--&gt;</table>-->

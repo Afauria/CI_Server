@@ -130,13 +130,15 @@ public class ModuleServiceImpl implements ModuleService {
         if ((moduleEntity = mModuleEntityMapper.selectModuleById(moduleId)) == null) {
             throw new BusinessException(-1, "构建失败，组件不存在");
         }
-        if(mModuleBuildEntityMapper.selectModuleBuild(moduleId,version)!=null){
+        if (mModuleBuildEntityMapper.selectModuleBuild(moduleId, version) != null) {
             throw new BusinessException(-1, "构建失败，版本已存在");
+        }
+        if (moduleEntity.getBuildStatus() == BuildStatus.BUILDING) {
+            throw new BusinessException(-1, "组件正在构建");
         }
         mModuleEntityMapper.updateStatus(moduleId, BuildStatus.BUILDING);
         try {
-            JobWithDetails job = mJenkinsServer.getJob(mJenkinsServerFactory.getModuleFolderJob(), moduleEntity
-                    .getName());
+            JobWithDetails job = mJenkinsServer.getJob(mJenkinsServerFactory.getModuleFolderJob(), moduleEntity.getName());
             if (job == null) {
                 throw new BusinessException(-1, "构建失败，Jenkins获取Job失败");
             }
@@ -164,16 +166,21 @@ public class ModuleServiceImpl implements ModuleService {
             mModuleEntityMapper.updateVersion(moduleBuildEntity.getModuleId(), moduleBuildEntity.getVersion());
         }
         mModuleEntityMapper.updateStatus(moduleBuildEntity.getModuleId(), moduleBuildEntity.getBuildStatus());
-        MessageEventHandler.sendAll(WSEvent.MODULE, MessageInfo.success(moduleBuildEntity.buildMsg()));
+        MessageInfo messageInfo = MessageInfo.success(moduleBuildEntity.buildMsg());
+        if (moduleBuildEntity.getBuildStatus() == BuildStatus.BUILD_FAIL) {
+            messageInfo = MessageInfo.error(moduleBuildEntity.buildMsg());
+        }
+        MessageEventHandler.sendAll(WSEvent.MODULE, messageInfo);
     }
 
     @Override
     public List<ModuleBuildEntity> searchVersions(int moduleId) {
         return mModuleBuildEntityMapper.selectModulesBuildByModuleId(moduleId);
     }
+
     //排除项目已经添加的组件
     @Override
-    public List<ModulesNameResp> searchEnableModulesName(int projectId){
+    public List<ModulesNameResp> searchEnableModulesName(int projectId) {
         return mModuleEntityMapper.selectEnableModulesName(projectId);
     }
 }

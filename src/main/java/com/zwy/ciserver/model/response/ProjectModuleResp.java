@@ -10,6 +10,7 @@ public class ProjectModuleResp implements Serializable {
     private int moduleBuildId;
     private int projectId;
     private int moduleId;
+    private int type;
     private String version;
     private String moduleName;
 
@@ -35,6 +36,14 @@ public class ProjectModuleResp implements Serializable {
 
     public void setProjectId(int projectId) {
         this.projectId = projectId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getVersion() {
