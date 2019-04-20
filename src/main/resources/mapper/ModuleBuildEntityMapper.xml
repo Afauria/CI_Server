@@ -23,19 +23,19 @@
         (module_id, module_name, build_num, build_status, version, message)
         values (#{moduleId}, #{moduleName}, #{buildNum}, #{buildStatus}, #{version}, #{message})
     </insert>
-    <select id="selectModuleBuild" resultMap="BaseResultMap">
+    <select id="selectSuccessModuleBuild" resultMap="BaseResultMap">
         select
         <include refid="COLUMN"/>
         from
         <include refid="TABLE"/>
-        where module_id = #{moduleId} and version = #{version}
+        where module_id = #{moduleId} and version = #{version} and build_status = 3
     </select>
-
+    <!--筛选构建成功的版本号-->
     <select id="selectModulesBuildByModuleId" resultMap="BaseResultMap">
         select
         <include refid="COLUMN"/>
         from
         <include refid="TABLE"/>
-        where module_id = #{moduleId}
+        where module_id = #{moduleId} and build_status = 3
     </select>
 </mapper>

@@ -12,18 +12,18 @@ public class VersionUtil {
     }
 
     public static void main(String args[]) {
-        System.out.println(nextRCVersion("1.0.1.rc_1"));
+        System.out.println(nextRCVersion("1.0.1.rc-1"));
     }
 
     public static String nextRCVersion(String curVersion) {
         if (curVersion == null) {
             return "";
         }
-        Pattern pattern = Pattern.compile("rc_(\\d+)");
+        Pattern pattern = Pattern.compile("rc-(\\d+)");
         Matcher matcher = pattern.matcher(curVersion);
         if (matcher.find()) {
             Integer num = Integer.parseInt(matcher.group(1)) + 1;
-            String nextVersion = curVersion.replace(matcher.group(0), "rc_" + num);
+            String nextVersion = curVersion.replace(matcher.group(0), "rc-" + num);
             return nextVersion;
         } else {
             return "";
@@ -34,8 +34,8 @@ public class VersionUtil {
         if (curVersion == null) {
             return "";
         }
-        if (curVersion.contains("rc_")) {
-            return curVersion.replaceAll("\\.rc_\\d+", "");
+        if (curVersion.contains("rc-")) {
+            return curVersion.replaceAll("\\.rc-\\d+", "");
         } else {
             return "";
         }

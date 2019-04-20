@@ -1,8 +1,8 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <project>
     <actions/>
-    <description>Android组件构建：修改版本号，打包aar上传maven仓库，提交代码</description>
-    <displayName>Android组件Girls</displayName>
+    <description>Android组件构建：修改sdk路径，修改版本号，打包aar上传maven仓库，提交代码</description>
+    <displayName>CIDemo_Girls:girls</displayName>
     <keepDependencies>false</keepDependencies>
     <properties>
         <com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.5.11">
@@ -37,9 +37,9 @@
                 <net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterDefinition plugin="git-parameter@0.9.10">
                     <name>BRANCH</name>
                     <description></description>
-                    <uuid>5a46362a-83b7-42a3-aa56-1ddd1a2b39ff</uuid>
+                    <uuid>5ccc98e8-1058-48b9-ba09-bf2ecf9fcd9b</uuid>
                     <type>PT_BRANCH</type>
-                    <branch></branch>
+                    <branch>master</branch>
                     <tagFilter>*</tagFilter>
                     <branchFilter>.*</branchFilter>
                     <sortMode>NONE</sortMode>
@@ -74,16 +74,48 @@
     <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
     <triggers/>
     <concurrentBuild>false</concurrentBuild>
-    <customWorkspace>/var/jenkins_workspace/$CATALOG</customWorkspace>
+    <customWorkspace>/var/jenkins_workspace/CIDemo_Girls</customWorkspace>
     <builders>
         <hudson.tasks.Shell>
             <command>
-echo 工程目录+$CATALOG
-./gradlew --version
-python /var/jenkins_workspace/ci_script/module_build.py -m $MODULE_ID -n $MODULE_NAME -v $AAR_VERSION -i $BUILD_NUMBER
+                echo 工程目录+$CATALOG
+                ./gradlew --version
+                python /var/jenkins_workspace/ci_script/module_build.py -m $MODULE_ID -n $MODULE_NAME -v $AAR_VERSION -i $BUILD_NUMBER -b $BRANCH
             </command>
         </hudson.tasks.Shell>
     </builders>
-    <publishers/>
+    <publishers>
+        <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.66">
+            <recipientList>$DEFAULT_RECIPIENTS</recipientList>
+            <configuredTriggers>
+                <hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+                    <email>
+                        <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+                        <body>$PROJECT_DEFAULT_CONTENT</body>
+                        <recipientProviders>
+                            <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+                        </recipientProviders>
+                        <attachmentsPattern></attachmentsPattern>
+                        <attachBuildLog>false</attachBuildLog>
+                        <compressBuildLog>false</compressBuildLog>
+                        <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+                        <contentType>project</contentType>
+                    </email>
+                </hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+            </configuredTriggers>
+            <contentType>default</contentType>
+            <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+            <defaultContent>$DEFAULT_CONTENT</defaultContent>
+            <attachmentsPattern></attachmentsPattern>
+            <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+            <postsendScript>$DEFAULT_POSTSEND_SCRIPT</postsendScript>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$DEFAULT_REPLYTO</replyTo>
+            <from></from>
+            <saveOutput>false</saveOutput>
+            <disabled>false</disabled>
+        </hudson.plugins.emailext.ExtendedEmailPublisher>
+    </publishers>
     <buildWrappers/>
 </project>

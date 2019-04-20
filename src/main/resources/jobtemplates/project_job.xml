@@ -1,8 +1,8 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <project>
   <actions/>
-  <description>Android项目构建，修改gradle依赖，提交代码</description>
-  <displayName>Android项目</displayName>
+  <description>Android项目构建：修改gradle依赖，提交代码</description>
+  <displayName>CI_Demo</displayName>
   <keepDependencies>false</keepDependencies>
   <properties>
     <com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.5.11">
@@ -13,9 +13,9 @@
         <net.uaznia.lukanus.hudson.plugins.gitparameter.GitParameterDefinition plugin="git-parameter@0.9.10">
           <name>BRANCH</name>
           <description></description>
-          <uuid>e888d761-b47d-4035-99a1-c1051e96db5c</uuid>
+          <uuid>b3802182-1f20-414d-b44b-ef1e6bf9d03b</uuid>
           <type>PT_BRANCH</type>
-          <branch></branch>
+          <branch>master</branch>
           <tagFilter>*</tagFilter>
           <branchFilter>.*</branchFilter>
           <sortMode>NONE</sortMode>
@@ -68,12 +68,44 @@
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
-  <customWorkspace>/var/as_project/ModuleApp/$CATALOG</customWorkspace>
+  <customWorkspace>/var/jenkins_workspace/CIDemo_AppShell</customWorkspace>
   <builders>
     <hudson.tasks.Shell>
       <command>python /var/jenkins_workspace/ci_script/project_build.py -p $PROJECT_ID -n $PROJECT_NAME -i $BUILD_NUMBER -l $PROJECT_MODULES</command>
     </hudson.tasks.Shell>
   </builders>
-  <publishers/>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.66">
+      <recipientList>$DEFAULT_RECIPIENTS</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.ListRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.AlwaysTrigger>
+      </configuredTriggers>
+      <contentType>default</contentType>
+      <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+      <defaultContent>$DEFAULT_CONTENT</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <postsendScript>$DEFAULT_POSTSEND_SCRIPT</postsendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>$DEFAULT_REPLYTO</replyTo>
+      <from></from>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+  </publishers>
   <buildWrappers/>
 </project>

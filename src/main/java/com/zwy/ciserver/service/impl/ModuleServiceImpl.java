@@ -130,7 +130,7 @@ public class ModuleServiceImpl implements ModuleService {
         if ((moduleEntity = mModuleEntityMapper.selectModuleById(moduleId)) == null) {
             throw new BusinessException(-1, "构建失败，组件不存在");
         }
-        if (mModuleBuildEntityMapper.selectModuleBuild(moduleId, version) != null) {
+        if (mModuleBuildEntityMapper.selectSuccessModuleBuild(moduleId, version) != null) {
             throw new BusinessException(-1, "构建失败，版本已存在");
         }
         if (moduleEntity.getBuildStatus() == BuildStatus.BUILDING) {
@@ -147,6 +147,7 @@ public class ModuleServiceImpl implements ModuleService {
             param.put("MODULE_NAME", moduleEntity.getName());
             param.put("CATALOG", moduleEntity.getCatalog());
             param.put("AAR_VERSION", version);
+            param.put("BRANCH",moduleEntity.getBranch());
             job.build(param);
         } catch (IOException e) {
             e.printStackTrace();
