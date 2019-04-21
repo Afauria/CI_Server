@@ -29,6 +29,8 @@ public interface ProjectService {
 
     boolean buildProject(int projectId);
 
+    boolean integrateProject(int projectId);
+
     void handleBuildResult(ProjectBuildEntity projectBuildEntity);
 
     PageInfo<ProjectBuildEntity> findProjectBuildHistory(int projectId, int pageNum, int pageSize);

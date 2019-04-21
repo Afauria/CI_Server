@@ -3,6 +3,7 @@ package com.zwy.ciserver.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.offbytwo.jenkins.JenkinsServer;
+import com.offbytwo.jenkins.model.BuildWithDetails;
 import com.offbytwo.jenkins.model.JobWithDetails;
 import com.zwy.ciserver.common.BuildStatus;
 import com.zwy.ciserver.common.WSEvent;
@@ -12,6 +13,7 @@ import com.zwy.ciserver.dao.ModuleBuildEntityMapper;
 import com.zwy.ciserver.dao.ModuleEntityMapper;
 import com.zwy.ciserver.entity.ModuleBuildEntity;
 import com.zwy.ciserver.entity.ModuleEntity;
+import com.zwy.ciserver.entity.ProjectBuildEntity;
 import com.zwy.ciserver.jenkins.JenkinsServerFactory;
 import com.zwy.ciserver.model.response.ModulesNameResp;
 import com.zwy.ciserver.service.ModuleService;
@@ -147,7 +149,7 @@ public class ModuleServiceImpl implements ModuleService {
             param.put("MODULE_NAME", moduleEntity.getName());
             param.put("CATALOG", moduleEntity.getCatalog());
             param.put("AAR_VERSION", version);
-            param.put("BRANCH",moduleEntity.getBranch());
+            param.put("BRANCH", moduleEntity.getBranch());
             job.build(param);
         } catch (IOException e) {
             e.printStackTrace();
@@ -183,5 +185,30 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public List<ModulesNameResp> searchEnableModulesName(int projectId) {
         return mModuleEntityMapper.selectEnableModulesName(projectId);
+    }
+
+    @Override
+    public PageInfo<ModuleBuildEntity> findModuleBuildHistory(int moduleId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<ModuleBuildEntity> moduleBuilds = mModuleBuildEntityMapper.selectModuleBuilds(moduleId);
+        PageInfo result = new PageInfo(moduleBuilds);
+        return result;
+    }
+
+    @Override
+    public String findModuleBuildReport(int buildId) {
+        ModuleBuildEntity moduleBuildEntity;
+        if ((moduleBuildEntity = mModuleBuildEntityMapper.selectModuleBuildById(buildId)) == null) {
+            throw new BusinessException(-1, "组件构建信息不存在");
+        }
+        try {
+            JobWithDetails job = mJenkinsServer.getJob(mJenkinsServerFactory.getModuleFolderJob(), moduleBuildEntity
+                    .getModuleName());
+            BuildWithDetails build = job.getBuildByNumber(moduleBuildEntity.getBuildNum()).details();
+            return build.getConsoleOutputText();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

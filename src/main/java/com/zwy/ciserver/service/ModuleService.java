@@ -29,4 +29,8 @@ public interface ModuleService {
     List<ModuleBuildEntity> searchVersions(int moduleBuildId);
 
     List<ModulesNameResp> searchEnableModulesName(int projectId);
+
+    PageInfo<ModuleBuildEntity> findModuleBuildHistory(int moduleId, int pageNum, int pageSize);
+
+    String findModuleBuildReport(int buildId);
 }

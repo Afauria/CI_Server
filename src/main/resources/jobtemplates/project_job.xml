@@ -42,6 +42,12 @@
           <defaultValue></defaultValue>
           <trim>false</trim>
         </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BUILD_TYPE</name>
+          <description>构建类型：1：构建；2：集成</description>
+          <defaultValue>1</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
@@ -71,7 +77,14 @@
   <customWorkspace>/var/jenkins_workspace/CIDemo_AppShell</customWorkspace>
   <builders>
     <hudson.tasks.Shell>
-      <command>python /var/jenkins_workspace/ci_script/project_build.py -p $PROJECT_ID -n $PROJECT_NAME -i $BUILD_NUMBER -l $PROJECT_MODULES</command>
+      <command>if [ $BUILD_TYPE = "1" ] ; then
+        echo "project build......"
+        python /var/jenkins_workspace/ci_script/project_build.py -p $PROJECT_ID -n $PROJECT_NAME -i $BUILD_NUMBER -l $PROJECT_MODULES -b $BRANCH
+        else
+        echo "project integrate......"
+        python /var/jenkins_workspace/ci_script/project_integrate.py -p $PROJECT_ID -n $PROJECT_NAME -i $BUILD_NUMBER  -b $BRANCH
+        fi
+      </command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>

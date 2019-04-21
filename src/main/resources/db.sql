@@ -58,6 +58,8 @@ create table if not exists t_project_build(
 	project_name VARCHAR(30) NOT NULL,
 	build_num int NOT NULL,
 	build_status INT(1) DEFAULT 1,
+	type INT(1) DEFAULT 1,
+  download_url VARCHAR(100),
 	message VARCHAR(100),
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (project_id) REFERENCES t_project(project_id)

@@ -45,15 +45,15 @@ public class ProjectController {
         return ResultUtil.success(mProjectService.findProjectInfo(projectId));
     }
 
-    @GetMapping("/info/{projectId}/history")
-    public Result findProjectBuildHistory(@PathVariable("projectId") int projectId,
+    @GetMapping("/info/history")
+    public Result findProjectBuildHistory(@RequestParam("projectId") int projectId,
                                           @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum,
                                           @RequestParam(name = "pageSize", required = false, defaultValue = "10") int
                                                   pageSize) {
         return ResultUtil.success(mProjectService.findProjectBuildHistory(projectId, pageNum, pageSize));
     }
 
-    @PostMapping("/info/build")
+    @PostMapping("/info/buildReport")
     public Result findProjectBuildReport(int buildId) {
         return ResultUtil.success(mProjectService.findProjectBuildReport(buildId));
     }
@@ -76,5 +76,10 @@ public class ProjectController {
     @PostMapping("/build")
     public Result buildProject(int projectId) {
         return ResultUtil.success(mProjectService.buildProject(projectId));
+    }
+
+    @PostMapping("/integrate")
+    public Result integrateProject(int projectId) {
+        return ResultUtil.success(mProjectService.integrateProject(projectId));
     }
 }

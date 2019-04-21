@@ -7,20 +7,22 @@
         <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
         <result column="build_num" property="buildNum" jdbcType="INTEGER"/>
         <result column="build_status" property="buildStatus" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="message" property="message" jdbcType="VARCHAR"/>
+        <result column="download_url" property="downloadUrl" jdbcType="VARCHAR"/>
         <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="TABLE">
         t_project_build
     </sql>
     <sql id="COLUMN">
-        project_build_id, project_id, build_num, project_name, build_status, message, gmt_create
+        project_build_id, project_id, build_num, project_name, build_status, type, message, download_url, gmt_create
     </sql>
     <insert id="insert" parameterType="com.zwy.ciserver.entity.ProjectBuildEntity">
         insert into
         <include refid="TABLE"/>
-        (project_build_id, project_id, project_name,build_num, build_status, message)
-        values (#{projectBuildId}, #{projectId}, #{projectName}, #{buildNum}, #{buildStatus}, #{message})
+        (project_build_id, project_id, project_name,build_num, build_status,type, message, download_url)
+        values (#{projectBuildId}, #{projectId}, #{projectName}, #{buildNum}, #{buildStatus},#{type}, #{message}, #{downloadUrl})
     </insert>
     <select id="selectProjectBuilds" resultMap="BaseResultMap">
         select
@@ -28,6 +30,7 @@
         from
         <include refid="TABLE"/>
         where project_id = #{projectId}
+        order by project_build_id desc
     </select>
     <select id="selectProjectBuildById" resultMap="BaseResultMap">
         select

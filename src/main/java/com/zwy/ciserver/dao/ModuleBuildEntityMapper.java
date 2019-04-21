@@ -11,4 +11,8 @@ public interface ModuleBuildEntityMapper {
     ModuleBuildEntity selectSuccessModuleBuild(@Param("moduleId") int moduleId, @Param("version") String version);
 //    ModuleBuildEntity selectModuleBuildById(int linkId);
     List<ModuleBuildEntity> selectModulesBuildByModuleId(int moduleBuildId);
+
+    ModuleBuildEntity selectModuleBuildById(int moduleBuildId);
+
+    List<ModuleBuildEntity> selectModuleBuilds(int moduleId);
 }

@@ -38,4 +38,17 @@
         <include refid="TABLE"/>
         where module_id = #{moduleId} and build_status = 3
     </select>
+
+    <select id="selectModuleBuildById" resultMap="BaseResultMap">
+        select * from
+        <include refid="TABLE"/>
+        where module_build_id = #{moduleBuildId}
+    </select>
+
+    <select id="selectModuleBuilds" resultMap="BaseResultMap">
+        select * from
+        <include refid="TABLE"/>
+        where module_id = #{moduleId}
+        order by module_build_id desc
+    </select>
 </mapper>

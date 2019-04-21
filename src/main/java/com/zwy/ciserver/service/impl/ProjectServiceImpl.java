@@ -3,7 +3,6 @@ package com.zwy.ciserver.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.offbytwo.jenkins.JenkinsServer;
-import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.BuildWithDetails;
 import com.offbytwo.jenkins.model.JobWithDetails;
 import com.zwy.ciserver.common.BuildStatus;
@@ -153,7 +152,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (projectEntity.getBuildStatus() == BuildStatus.BUILDING) {
             throw new BusinessException(-1, "项目正在构建");
         }
-        mProjectEntityMapper.updateStatus(projectId, BuildStatus.BUILDING);
+        mProjectEntityMapper.updateBuildStatus(projectId, BuildStatus.BUILDING);
         List<ProjectModuleResp> projectModules = findProjectModule(projectId);
         JSONArray jsonArray = new JSONArray();
         for (ProjectModuleResp projectModule : projectModules) {
@@ -172,6 +171,36 @@ public class ProjectServiceImpl implements ProjectService {
             param.put("PROJECT_ID", String.valueOf(projectId));
             param.put("PROJECT_NAME", projectEntity.getName());
             param.put("PROJECT_MODULES", jsonArray.toString());
+            param.put("BRANCH",projectEntity.getBranch());
+            param.put("BUILD_TYPE","1");
+            job.build(param);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean integrateProject(int projectId) {
+        ProjectEntity projectEntity;
+        if ((projectEntity = mProjectEntityMapper.selectProjectById(projectId)) == null) {
+            throw new BusinessException(-1, "集成失败，项目不存在");
+        }
+        if (projectEntity.getIntegrateStatus() == BuildStatus.BUILDING) {
+            throw new BusinessException(-1, "项目正在集成");
+        }
+        mProjectEntityMapper.updateIntegrateStatus(projectId, BuildStatus.BUILDING);
+        try {
+            JobWithDetails job = mJenkinsServer.getJob(mJenkinsServerFactory.getProjectFolderJob(), projectEntity.getName());
+            if (job == null) {
+                throw new BusinessException(-1, "集成失败，Jenkins获取Job失败");
+            }
+            Map<String, String> param = new HashMap();
+            param.put("PROJECT_ID", String.valueOf(projectId));
+            param.put("PROJECT_NAME", projectEntity.getName());
+            param.put("BRANCH",projectEntity.getBranch());
+            param.put("BUILD_TYPE","2");
             job.build(param);
         } catch (IOException e) {
             e.printStackTrace();
@@ -187,7 +216,11 @@ public class ProjectServiceImpl implements ProjectService {
         if (mProjectEntityMapper.selectProjectById(projectBuildEntity.getProjectId()) == null) {
             throw new BusinessException(-1, "组件不存在");
         }
-        mProjectEntityMapper.updateStatus(projectBuildEntity.getProjectId(), projectBuildEntity.getBuildStatus());
+        if(projectBuildEntity.getType()==1){
+            mProjectEntityMapper.updateBuildStatus(projectBuildEntity.getProjectId(), projectBuildEntity.getBuildStatus());
+        }else{
+            mProjectEntityMapper.updateIntegrateStatus(projectBuildEntity.getProjectId(), projectBuildEntity.getBuildStatus());
+        }
         MessageInfo messageInfo = MessageInfo.success(projectBuildEntity.buildMsg());
         if (projectBuildEntity.getBuildStatus() == BuildStatus.BUILD_FAIL) {
             messageInfo = MessageInfo.error(projectBuildEntity.buildMsg());

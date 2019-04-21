@@ -97,7 +97,7 @@
         <include refid="TABLE"/>
         where
         #筛选出项目没有的组件
-        module_id not in (select module_id from t_project_module natural join t_module_build where project_id = #{projectId})
+        module_id not in (select module_id from t_project_module natural join t_module_build where project_id = #{projectId} and build_status = 3)
         #筛选出构建过的组件
         and module_id in (select module_id from t_module_build)
         order by `name`

@@ -30,5 +30,7 @@ public interface ProjectEntityMapper {
 
     boolean updateProjectModule(@Param("linkId") int linkId,@Param("projectId") int projectId,@Param("moduleBuildId") int moduleBuildId,@Param("type") int type);
 
-    void updateStatus(@Param("projectId")int projectId, @Param("buildStatus")int buildStatus);
+    void updateBuildStatus(@Param("projectId")int projectId, @Param("buildStatus")int buildStatus);
+
+    void updateIntegrateStatus(@Param("projectId")int projectId, @Param("integrateStatus")int integrateStatus);
 }

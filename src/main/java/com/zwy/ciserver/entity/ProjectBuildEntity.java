@@ -13,8 +13,12 @@ public class ProjectBuildEntity implements Serializable {
     private Integer buildNum;
 
     private Integer buildStatus;
+    //1:构建；2：集成
+    private Integer type;
 
     private String message;
+
+    private String downloadUrl;
 
     private Date gmtCreate;
 
@@ -68,12 +72,28 @@ public class ProjectBuildEntity implements Serializable {
         this.message = message == null ? null : message.trim();
     }
 
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
     public Date getGmtCreate() {
         return gmtCreate;
     }
 
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     @Override
@@ -94,9 +114,9 @@ public class ProjectBuildEntity implements Serializable {
         return sb.toString();
     }
 
-    public String buildMsg(){
+    public String buildMsg() {
         StringBuilder sb = new StringBuilder();
-        sb.append("项目").append(projectName).append("构建成功");
+        sb.append("项目").append(projectName).append(getMessage());
         return sb.toString();
     }
 }

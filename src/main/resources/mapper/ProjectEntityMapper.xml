@@ -103,10 +103,17 @@
         where p.project_id = #{projectId}
     </select>
 
-    <update id="updateStatus">
+    <update id="updateBuildStatus">
         update
         <include refid="TABLE"/>
         set build_status = #{buildStatus}
+        where project_id = #{projectId}
+    </update>
+
+    <update id="updateIntegrateStatus">
+        update
+        <include refid="TABLE"/>
+        set integrate_status = #{integrateStatus}
         where project_id = #{projectId}
     </update>
 
