@@ -21,8 +21,9 @@ jenkins:
     project: AndroidProjectFolder
 
 logging:
-  path: /output
-  file: output/aries.log
+  path: output
+  file: aries.log
+  config: classpath:logback-boot.xml
 ---
 
 #开发配置

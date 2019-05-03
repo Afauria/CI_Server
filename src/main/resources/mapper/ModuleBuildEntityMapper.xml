@@ -36,7 +36,7 @@
         <include refid="COLUMN"/>
         from
         <include refid="TABLE"/>
-        where module_id = #{moduleId} and build_status = 3
+        where module_id = #{moduleId} and build_status = 3 order by module_build_id desc
     </select>
 
     <select id="selectModuleBuildById" resultMap="BaseResultMap">

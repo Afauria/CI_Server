@@ -19,6 +19,8 @@ import com.zwy.ciserver.websocket.MessageEventHandler;
 import com.zwy.ciserver.websocket.MessageInfo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,7 @@ import java.util.Map;
  */
 @Service(value = "ProjectService")
 public class ProjectServiceImpl implements ProjectService {
+    Logger logger = LoggerFactory.getLogger(Logger.class);
     @Autowired
     private ProjectEntityMapper mProjectEntityMapper;
     @Autowired
@@ -70,6 +73,7 @@ public class ProjectServiceImpl implements ProjectService {
             e.printStackTrace();
             throw new BusinessException(-1, "添加失败，Jenkins添加Job异常");
         }
+        logger.info("添加项目成功！");
         return projectEntity;
     }
 
@@ -87,6 +91,7 @@ public class ProjectServiceImpl implements ProjectService {
             e.printStackTrace();
             throw new BusinessException(-1, "删除失败，Jenkins删除Job异常");
         }
+        logger.info("删除项目成功！");
         return projectId;
     }
 
@@ -110,6 +115,7 @@ public class ProjectServiceImpl implements ProjectService {
             e.printStackTrace();
             throw new BusinessException(-1, "修改失败，Jenkins修改Job异常");
         }
+        logger.info("修改项目成功！");
         return projectEntity;
     }
 
@@ -131,14 +137,20 @@ public class ProjectServiceImpl implements ProjectService {
     public boolean addProjectModule(int projectId, int moduleBuildId, int type) {
         Integer linkId;
         if ((linkId = mProjectEntityMapper.selectLink(projectId, moduleBuildId)) != null) {
+            logger.info("修改项目组件成功！");
             return mProjectEntityMapper.updateProjectModule(linkId, projectId, moduleBuildId, type);
         } else {
+            logger.info("添加项目组件成功！");
             return mProjectEntityMapper.addProjectModule(projectId, moduleBuildId, type);
         }
     }
 
     @Override
     public boolean removeProjectModule(int projectId, int moduleBuildId) {
+        if ((mProjectEntityMapper.selectLink(projectId, moduleBuildId)) == null) {
+            throw new BusinessException(-1, "项目组件不存在！");
+        }
+        logger.info("删除项目组件成功！");
         return mProjectEntityMapper.deleteProjectModule(projectId, moduleBuildId);
     }
 
@@ -171,13 +183,14 @@ public class ProjectServiceImpl implements ProjectService {
             param.put("PROJECT_ID", String.valueOf(projectId));
             param.put("PROJECT_NAME", projectEntity.getName());
             param.put("PROJECT_MODULES", jsonArray.toString());
-            param.put("BRANCH",projectEntity.getBranch());
-            param.put("BUILD_TYPE","1");
+            param.put("BRANCH", projectEntity.getBranch());
+            param.put("BUILD_TYPE", "1");
             job.build(param);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
+        logger.info("===========开始构建项目！===========");
         return true;
     }
 
@@ -199,13 +212,14 @@ public class ProjectServiceImpl implements ProjectService {
             Map<String, String> param = new HashMap();
             param.put("PROJECT_ID", String.valueOf(projectId));
             param.put("PROJECT_NAME", projectEntity.getName());
-            param.put("BRANCH",projectEntity.getBranch());
-            param.put("BUILD_TYPE","2");
+            param.put("BRANCH", projectEntity.getBranch());
+            param.put("BUILD_TYPE", "2");
             job.build(param);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
+        logger.info("===========开始集成项目！===========");
         return true;
     }
 
@@ -216,9 +230,9 @@ public class ProjectServiceImpl implements ProjectService {
         if (mProjectEntityMapper.selectProjectById(projectBuildEntity.getProjectId()) == null) {
             throw new BusinessException(-1, "组件不存在");
         }
-        if(projectBuildEntity.getType()==1){
+        if (projectBuildEntity.getType() == 1) {
             mProjectEntityMapper.updateBuildStatus(projectBuildEntity.getProjectId(), projectBuildEntity.getBuildStatus());
-        }else{
+        } else {
             mProjectEntityMapper.updateIntegrateStatus(projectBuildEntity.getProjectId(), projectBuildEntity.getBuildStatus());
         }
         MessageInfo messageInfo = MessageInfo.success(projectBuildEntity.buildMsg());
@@ -226,6 +240,7 @@ public class ProjectServiceImpl implements ProjectService {
             messageInfo = MessageInfo.error(projectBuildEntity.buildMsg());
         }
         MessageEventHandler.sendAll(WSEvent.PROJECT, messageInfo);
+        logger.info("项目构建结果：" + projectBuildEntity.buildMsg());
     }
 
     @Override
@@ -240,11 +255,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public String findProjectBuildReport(int buildId) {
         ProjectBuildEntity projectBuildEntity;
-        if((projectBuildEntity= mProjectBuildEntityMapper.selectProjectBuildById(buildId))==null){
-            throw new BusinessException(-1,"项目构建信息不存在");
+        if ((projectBuildEntity = mProjectBuildEntityMapper.selectProjectBuildById(buildId)) == null) {
+            throw new BusinessException(-1, "项目构建信息不存在");
         }
         try {
-            JobWithDetails job=mJenkinsServer.getJob(mJenkinsServerFactory.getProjectFolderJob(), projectBuildEntity.getProjectName());
+            JobWithDetails job = mJenkinsServer.getJob(mJenkinsServerFactory.getProjectFolderJob(), projectBuildEntity
+                    .getProjectName());
             BuildWithDetails build = job.getBuildByNumber(projectBuildEntity.getBuildNum()).details();
             return build.getConsoleOutputText();
         } catch (IOException e) {

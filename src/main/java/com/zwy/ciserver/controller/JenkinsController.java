@@ -32,15 +32,15 @@ public class JenkinsController {
 
     @PostMapping("/notify/module")
     public Result handleMsg(ModuleBuildEntity moduleBuildEntity) {
-        logger.info("receive jenkins module notify");
+        logger.info("receive jenkins module notify.");
         mModuleService.handleBuildResult(moduleBuildEntity);
-        return ResultUtil.success("handle jenkins message success");
+        return ResultUtil.success("handle jenkins message success.");
     }
 
     @PostMapping("/notify/project")
     public Result handleMsg(ProjectBuildEntity projectBuildEntity) {
         logger.info("receive jenkins project notify");
         mProjectService.handleBuildResult(projectBuildEntity);
-        return ResultUtil.success("handle jenkins message success");
+        return ResultUtil.success("handle jenkins message success.");
     }
 }

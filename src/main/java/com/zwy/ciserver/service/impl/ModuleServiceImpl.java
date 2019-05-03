@@ -19,6 +19,8 @@ import com.zwy.ciserver.model.response.ModulesNameResp;
 import com.zwy.ciserver.service.ModuleService;
 import com.zwy.ciserver.websocket.MessageEventHandler;
 import com.zwy.ciserver.websocket.MessageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,7 @@ import java.util.Map;
  */
 @Service(value = "ModuleService")
 public class ModuleServiceImpl implements ModuleService {
+    Logger logger = LoggerFactory.getLogger(Logger.class);
     @Autowired
     private ModuleEntityMapper mModuleEntityMapper;
     @Autowired
@@ -63,7 +66,7 @@ public class ModuleServiceImpl implements ModuleService {
     @Transactional
     public ModuleEntity addModule(ModuleEntity moduleEntity) {
         if (mModuleEntityMapper.selectModuleByName(moduleEntity.getName()) != null) {
-            throw new BusinessException(-1, "添加失败；组件名已存在！");
+            throw new BusinessException(-1, "添加失败：组件名已存在！");
         }
         mModuleEntityMapper.insertModule(moduleEntity);
         try {
@@ -71,8 +74,9 @@ public class ModuleServiceImpl implements ModuleService {
             mJenkinsServer.createJob(mJenkinsServerFactory.getModuleFolderJob(), moduleEntity.getName(), jobXml);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new BusinessException(-1, "添加失败，Jenkins添加Job异常");
+            throw new BusinessException(-1, "添加失败：Jenkins添加Job异常");
         }
+        logger.info("添加组件成功！");
         return moduleEntity;
     }
 
@@ -88,8 +92,9 @@ public class ModuleServiceImpl implements ModuleService {
             mJenkinsServer.deleteJob(mJenkinsServerFactory.getModuleFolderJob(), moduleEntity.getName());
         } catch (IOException e) {
             e.printStackTrace();
-            throw new BusinessException(-1, "删除失败，Jenkins删除Job异常");
+            throw new BusinessException(-1, "删除失败：Jenkins删除Job异常");
         }
+        logger.info("删除组件成功！");
         return moduleId;
     }
 
@@ -111,8 +116,9 @@ public class ModuleServiceImpl implements ModuleService {
                     true);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new BusinessException(-1, "修改失败，Jenkins修改Job异常");
+            throw new BusinessException(-1, "修改失败：Jenkins修改Job异常");
         }
+        logger.info("修改组件成功！");
         return moduleEntity;
     }
 
@@ -130,10 +136,10 @@ public class ModuleServiceImpl implements ModuleService {
     public boolean buildModule(int moduleId, String version) {
         ModuleEntity moduleEntity;
         if ((moduleEntity = mModuleEntityMapper.selectModuleById(moduleId)) == null) {
-            throw new BusinessException(-1, "构建失败，组件不存在");
+            throw new BusinessException(-1, "构建失败：组件不存在");
         }
         if (mModuleBuildEntityMapper.selectSuccessModuleBuild(moduleId, version) != null) {
-            throw new BusinessException(-1, "构建失败，版本已存在");
+            throw new BusinessException(-1, "构建失败：版本已存在");
         }
         if (moduleEntity.getBuildStatus() == BuildStatus.BUILDING) {
             throw new BusinessException(-1, "组件正在构建");
@@ -142,7 +148,7 @@ public class ModuleServiceImpl implements ModuleService {
         try {
             JobWithDetails job = mJenkinsServer.getJob(mJenkinsServerFactory.getModuleFolderJob(), moduleEntity.getName());
             if (job == null) {
-                throw new BusinessException(-1, "构建失败，Jenkins获取Job失败");
+                throw new BusinessException(-1, "构建失败：Jenkins获取Job失败");
             }
             Map<String, String> param = new HashMap();
             param.put("MODULE_ID", String.valueOf(moduleId));
@@ -155,6 +161,7 @@ public class ModuleServiceImpl implements ModuleService {
             e.printStackTrace();
             return false;
         }
+        logger.info("开始构建组件！");
         return true;
     }
 
@@ -174,6 +181,7 @@ public class ModuleServiceImpl implements ModuleService {
             messageInfo = MessageInfo.error(moduleBuildEntity.buildMsg());
         }
         MessageEventHandler.sendAll(WSEvent.MODULE, messageInfo);
+        logger.info("组件构建结果：" + moduleBuildEntity.buildMsg());
     }
 
     @Override

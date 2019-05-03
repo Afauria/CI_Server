@@ -31,15 +31,6 @@ create table if not exists t_project(
 	gmt_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )DEFAULT CHARSET=utf8;
 
-create table if not exists t_project_module(
-	id INT primary key auto_increment,
-	project_id int,
-	module_build_id int,
-	type int,
-	FOREIGN KEY (project_id) REFERENCES t_project(project_id) ON DELETE CASCADE,
-	FOREIGN KEY (module_build_id) REFERENCES t_module_build(module_build_id)
-)DEFAULT CHARSET=utf8;
-
 create table if not exists t_module_build(
 	module_build_id INT PRIMARY KEY auto_increment,
 	module_id int NOT NULL,
@@ -49,7 +40,7 @@ create table if not exists t_module_build(
 	version VARCHAR(10) NOT NULL,
 	message VARCHAR(100),
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (module_id) REFERENCES t_module(module_id)
+	FOREIGN KEY (module_id) REFERENCES t_module(module_id) ON DELETE CASCADE
 )DEFAULT CHARSET=utf8;
 
 create table if not exists t_project_build(
@@ -62,5 +53,14 @@ create table if not exists t_project_build(
   download_url VARCHAR(100),
 	message VARCHAR(100),
 	gmt_create TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (project_id) REFERENCES t_project(project_id)
+	FOREIGN KEY (project_id) REFERENCES t_project(project_id) ON DELETE CASCADE
+)DEFAULT CHARSET=utf8;
+
+create table if not exists t_project_module(
+	id INT primary key auto_increment,
+	project_id int,
+	module_build_id int,
+	type int,
+	FOREIGN KEY (project_id) REFERENCES t_project(project_id) ON DELETE CASCADE,
+	FOREIGN KEY (module_build_id) REFERENCES t_module_build(module_build_id) ON DELETE CASCADE
 )DEFAULT CHARSET=utf8;
